@@ -9,12 +9,12 @@
 	<body>
 		<h1 align="center">Meal Planning Database</h1>
 		<form align="center" method="POST">
-			Username: 
-			<input type="email"><br>
-			Password:
-			<input type="text"><br>
-			<input type="submit" value="Login">
-			<input type="submit" value="New User">
+			<label> Type: <select><option value="food">Food</option><option value="recipe">Recipe</option></select></label>
+			<label> Name: <input type="search"></label>	
+			<input type="submit" value="Search">
 		</form>
+		<div id="results">
+			<!--Search results go here-->
+		</div>
 	</body>
 </html>

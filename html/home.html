@@ -7,16 +7,28 @@
 		<link rel="stylesheet" href="/css/style.css" type="text/css">
 	</head>
 	<body>
-		<h1 class="outerDiv" align="center">Meal Planning Database</h1>
-		<div class="outerDiv" align="center">
-			<a class="link" href="http://flip3.engr.oregonstate.edu:7296/search">Search</a>
-			<a class="link" href="http://flip3.engr.oregonstate.edu:7296/insert">Insert</a>
-			<a class="link" href="http://flip3.engr.oregonstate.edu:7296/delete">Delete</a>
-			<a class="link" href="http://flip3.engr.oregonstate.edu:7296/update">Update</a>
+		<h1 align="center">Meal Planning Database</h1>
+		<form align="center" action="http://web.engr.oregonstate.edu/~ludwigje/CS340_Project/search.html">
+			<input type="submit" value="Search">
+		</form>
 		</div>
-		<h2>User</h2>
-		<h2>Diet(s)</h2>
-		<h2>Recipes</h2>
-		<!-- put query to show username and selected recipes* -->
+		<h2 align="center">User</h2>
+			<div id="u_results">
+				<!--query results go here-->
+			</div>
+		<h2 align="center">Diet(s)</h2>
+			<div id="d_results">
+				<!--query results go here-->
+			</div>
+		<h2 align="center">Recipes</h2>
+			<div id="r_results">
+				<!--query results go here-->
+			</div>
+		<form id="u_update" align="center" action="http://web.engr.oregonstate.edu/~ludwigje/CS340_Project/user.html">
+			<input type="submit" value="Update Settings">
+		</form >
+		<form id="u_delete" align="center" method="POST">
+			<input type="submit" value="Delete Account">
+		</form >
 	</body>
 </html>
