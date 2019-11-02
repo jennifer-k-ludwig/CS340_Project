@@ -1,0 +1,22 @@
+.login_form {
+	margin-left: auto;
+  	margin-right: auto;
+
+}
+
+.login_form input:not([type="submit"]){
+	width: 50%;
+  	padding: 12px 20px;
+  	margin-left: auto;
+  	margin-right: auto;
+
+}
+
+
+.login_form input[type="submit"]{
+  	margin-left: auto;
+  	margin-right: auto;
+
+ 
+}
+
