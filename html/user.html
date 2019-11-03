@@ -4,9 +4,16 @@
 		<meta charset="UTF-8">
 		<meta name="author" content="Jennifer Ludwig and Brian Dong">
 		<title>Meal Planning Database</title>
-		<link rel="stylesheet" href="/css/style.css" type="text/css">
+		<link rel="stylesheet" href="style.css" type="text/css">
 	</head>
 	<body>
+		<ul>
+		  <li><a class= "home_nav" href="home.html" >Home</a></li>
+		  <li><a class= "serach_nav" href="search.html">Food & Recipes</a></li>
+		  <li><a class= "user_nav" href="user.html"style="background-color: green;">Account Settings</a></li>
+		  
+		</ul>
+
 		<h1 align="center">Meal Planning Database</h1>
 		<h2 align="center">User Settings</h2>
 		<form align="center" method="POST">
@@ -24,7 +31,10 @@
 			<label> No Animal Products <input type="checkbox"></label><br>	
 			<label> No Gluten <input type="checkbox"></label><br>	
 			<label> No Soy <input type="checkbox"></label><br>				
-			<input type="submit" value="Create Account" >
+			<input type="submit" value="Save Changes" >
 		</form>
+		<form id="u_delete" align="center" method="POST">
+			<input type="submit" value="Delete Account">
+		</form >
 	</body>
 </html>
