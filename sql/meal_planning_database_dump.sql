@@ -23,8 +23,15 @@ CREATE TABLE `users` (
 --
 
 LOCK TABLES `users` WRITE;
-INSERT INTO `users` (`first_name`,`last_name`,`birth_date`,
-`email_address`,`password`,`max_calories`,`diet`) VALUES
+INSERT INTO `users` 
+	(`first_name`,
+	`last_name`,
+	`birth_date`,
+	`email_address`,
+	`password`,
+	`max_calories`,
+	`diet`) 
+VALUES
 ('Steve', 'Smith', '2001-01-23', 's.smith@gmail.com', 'rider3', 
 '3000', 1),
 ('Jessica', 'Gervais', '1990-11-14', 'badass@yahoo.com', 
@@ -54,15 +61,19 @@ CREATE TABLE `diets` (
 --
 
 LOCK TABLES `diets` WRITE;
-INSERT INTO `diets` (`diet_no_meat`,`diet_no_dairy`,`diet_no_nuts`,
-`diet_no_shellfish`,`diet_no_carbs`,`diet_no_animal_products`,
-`diet_no_gluten`,`diet_no_soy`) VALUES
+INSERT INTO `diets` 
+	(`diet_no_meat`,
+	`diet_no_dairy`,
+	`diet_no_nuts`,
+	`diet_no_shellfish`,
+	`diet_no_carbs`,
+	`diet_no_animal_products`,
+	`diet_no_gluten`,
+	`diet_no_soy`) 
+VALUES
 (TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE),
-(FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE)
-;
+(FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE);
 UNLOCK TABLES;
-
-
 
 --
 -- Table structure for table `recipes`
@@ -89,17 +100,24 @@ CREATE TABLE `recipes` (
 --
 
 LOCK TABLES `recipes` WRITE;
-INSERT INTO `recipes` (`recipe_name`,`recipe_no_meat`,`recipe_no_dairy`
-,`recipe_no_nuts`,`recipe_no_shellfish`,`recipe_no_carbs`,
-`recipe_no_animal_products`,`recipe_no_gluten`,`recipe_no_soy`) VALUES
+INSERT INTO `recipes` 
+	(`recipe_name`,
+	`recipe_no_meat`,
+	`recipe_no_dairy`,
+	`recipe_no_nuts`,
+	`recipe_no_shellfish`,
+	`recipe_no_carbs`,
+	`recipe_no_animal_products`,
+	`recipe_no_gluten`,
+	`recipe_no_soy`) 
+VALUES
 ('Spaghetti and Meatballs',FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE),
 ('Beef Stroganoff',FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE),
 ('Mac and Cheese',TRUE,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE),
 ('Chicken Pot Pie',FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE),
 ('Peach Cobbler',TRUE,TRUE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE),
 ('Chicken Parmesan',FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE),
-('Walnut Brownies',TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,TRUE)
-;
+('Walnut Brownies',TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,TRUE);
 UNLOCK TABLES;
 
 --
@@ -127,9 +145,18 @@ CREATE TABLE `foods` (
 --
 
 LOCK TABLES `foods` WRITE;
-INSERT INTO `foods` (`food_name`,`calories_ounce`,`contains_meat`,
-`contains_dairy`,`contains_nuts`,`contains_shellfish`,`contains_carbs`,
-`contains_animal_products`,`contains_gluten`,`contains_soy`) VALUES
+INSERT INTO `foods` 
+	(`food_name`,
+	`calories_ounce`,
+	`contains_meat`,
+	`contains_dairy`,
+	`contains_nuts`,
+	`contains_shellfish`,
+	`contains_carbs`,
+	`contains_animal_products`,
+	`contains_gluten`,
+	`contains_soy`) 
+VALUES
 ('Chicken Breast',50,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE),
 ('Cheese',100,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE),
 ('Ground Beef 80% Lean',71,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE),
@@ -154,11 +181,11 @@ CREATE TABLE `users_recipes` (
 );
 
 --
--- Dumping data for table `recipes_diets`
+-- Dumping data for table `users_recipes`
 --
 
---LOCK TABLES `recipes_diets` WRITE;
---INSERT INTO `recipes_diets` (`recipe`,`diet`) VALUES;
+--LOCK TABLES `users_recipes` WRITE;
+--INSERT INTO `users_recipes` (`user`,`recipe`) VALUES;
 --UNLOCK TABLES;
 
 --
@@ -200,7 +227,10 @@ CREATE TABLE `foods_recipes` (
 --
 
 LOCK TABLES `foods_recipes` WRITE;
-INSERT INTO `foods_recipes` (`food`,`recipe`) VALUES
+INSERT INTO `foods_recipes` 
+	(`food`,
+	`recipe`) 
+VALUES
 (1,4),
 (1,6),
 (2,3),
