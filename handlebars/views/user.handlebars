@@ -1,0 +1,27 @@
+<ul>
+  <li><a class= "home_nav" href="home.html" >Home</a></li>
+  <li><a class= "serach_nav" href="search.html">Food & Recipes</a></li>
+  <li><a class= "user_nav" href="user.html"style="background-color: green;">Account Settings</a></li>
+  
+</ul>
+<h2 align="center">User Settings</h2>
+<form align="center" method="POST" action="http://flip3.engr.oregonstate.edu:7296/user">
+	<label> First Name: <input type="text"></label><br>
+	<label> Last Name: <input type="text"></label><br>
+	<label> Birth Date: <input type="date"></label><br>
+	<label> Email Address: <input type="email"></label><br>			
+	<label> Password: <input type="password"></label><br>
+	Dietary Preferences:<br>
+	<label> No Meat <input type="checkbox"></label><br>	
+	<label> No Dairy <input type="checkbox"></label><br>	
+	<label> No Nuts <input type="checkbox"></label><br>	
+	<label> No Shellfish <input type="checkbox"></label><br>	
+	<label> No Carbs <input type="checkbox"></label><br>	
+	<label> No Animal Products <input type="checkbox"></label><br>	
+	<label> No Gluten <input type="checkbox"></label><br>	
+	<label> No Soy <input type="checkbox"></label><br>				
+	<input type="submit" value="Save Changes" >
+</form>
+<form id="u_delete" align="center" method="POST">
+	<input type="submit" value="Delete Account">
+</form >
