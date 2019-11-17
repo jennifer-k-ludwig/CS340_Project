@@ -52,7 +52,7 @@ CREATE TABLE `users` (
 	`first_name` VARCHAR(255) NOT NULL,
 	`last_name` VARCHAR(255) NOT NULL,
 	`birth_date` DATE NOT NULL,
-	`email_address` VARCHAR(255) NOT NULL,
+	`email_address` VARCHAR(255) UNIQUE NOT NULL,
 	`password` VARCHAR(255) NOT NULL,
 	`max_calories` INT(11) NOT NULL,
 	`diet` INT(11),

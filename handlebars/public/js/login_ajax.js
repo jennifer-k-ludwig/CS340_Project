@@ -14,7 +14,7 @@ function login() {
 		
 		// Define what happens on successful data submission
 		request.addEventListener("load", function(event) {
-			window.location.href = "http://flip3.engr.oregonstate.edu:7296/home";		
+			window.location.href = "http://flip3.engr.oregonstate.edu:7296/";		
 		});
 		
 		// Define what happens in case of error
