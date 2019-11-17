@@ -1,15 +1,62 @@
-
+<ul>
+  <li><a class= "home_nav" href="home.html" style="background-color: green;">Home</a></li>
+  <li><a class= "serach_nav" href="search.html">Food & Recipes</a></li>
+  <li><a class= "user_nav" href="user.html">Account Settings</a></li>
+</ul>
 <h3 align="center">Want to add more recipes to your plan?</h3>
 <form align="center" action="http://flip3.engr.oregonstate.edu:7296/search">
 	<input type="submit" value="Search for more recipes!">
 </form>
 </div>
-<h2 align="center">Welcome back, {{{user}}}!</h2>
+
 <h2 align="center">Your diet selections...</h2>
-	<div id="d_results">
-		<!--query results go here-->
-	</div>
+	<table align="center">
+		<thead>
+			<th>Diet ID</th>
+			<th>No Meat</th>
+			<th>No Dairy</th>
+			<th>No Nuts</th>
+			<th>No Shellfish</th>
+			<th>No Carbs</th>
+			<th>No Animal Products</th>
+			<th>No Gluten</th>
+			<th>No Soy</th>  
+		</thead> 
+
+		<tbody>
+			{{#each diet}}
+			<tr>
+				<td>{{diet_id}}</td>
+				<td>{{diet_no_meat}}</td>
+				<td>{{diet_no_dairy}}</td>
+				<td>{{diet_no_nuts}}</td>
+				<td>{{diet_no_shellfish}}</td>
+				<td>{{diet_no_carbs}}</td>
+				<td>{{diet_no_animal_products}}</td>
+				<td>{{diet_no_gluten}}</td>
+				<td>{{diet_no_soy}}</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+
+<br>
+<br>
+
 <h2 align="center">Your recipes...</h2>
-	<div id="r_results">
-		<!--query results go here-->
-	</div>
+
+	<table align="center">
+		<thead>
+			<th>Recipe ID</th>
+			<th>Recipe Name</th>
+		</thead>
+
+		<tbody>
+			{{#each recipes}}
+			<tr>
+				<td>{{recipe_id}}</td>
+				<td>{{recipe_name}}</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
