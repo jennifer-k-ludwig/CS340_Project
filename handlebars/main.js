@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(session({secret:'SuperSecretPassword',resave:true,saveUninitialized: true}));
 app.use('/static', express.static('public'));
 app.set('view engine', 'handlebars');
-app.set('port', 7296);
+app.set('port', 7297);
 app.set('mysql', mysql);
 
 app.use('/login', require('./login.js'));

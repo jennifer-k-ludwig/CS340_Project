@@ -1,25 +1,39 @@
 <h2 align="center">User Settings</h2>
-<form id="user_info" align="center">
-	<label> First Name: <input id="first_name" type="text"></label><br>
-	<label> Last Name: <input id="last_name" type="text"></label><br>
-	<label> Birth Date: <input id="birth_date" type="date"></label><br>
-	<label> Max Calories per Day: <input id="max_calories" type="number"></label><br>
-	<label> Email Address: <input id="email_address" type="email"></label><br>			
-	<label> Password: <input id="password" type="password"></label><br>
+<form id="user_info" align="center" action="/user" method="post">
+	<label> First Name: <input name="first_name" type="text"></label><br>
+	<label> Last Name: <input name="last_name" type="text"></label><br>
+	<label> Birth Date: <input name="birth_date" type="date"></label><br>
+	<label> Max Calories per Day: <input name="max_calories" type="number"></label><br>
+	<label> Email Address: <input name="email_address" type="email"></label><br>			
+	<label> Password: <input name="password" type="password"></label><br>
 	Dietary Preferences:<br>
-	<label> No Meat <input id="no_meat" type="checkbox"></label><br>	
-	<label> No Dairy <input id="no_dairy" type="checkbox"></label><br>	
-	<label> No Nuts <input id="no_nuts" type="checkbox"></label><br>	
-	<label> No Shellfish <input id="no_shellfish" type="checkbox"></label><br>	
-	<label> No Carbs <input id="no_carbs" type="checkbox"></label><br>	
-	<label> No Animal Products <input id="no_animal_products" type="checkbox"></label><br>	
-	<label> No Gluten <input id="no_gluten" type="checkbox"></label><br>	
-	<label> No Soy <input id="no_soy" type="checkbox"></label><br>				
+	<label> No Meat <input name="no_meat_check" type="checkbox"></label><br>	
+	<input type="hidden" name="no_meat" value="false">
+	
+	<label> No Dairy <input name="no_dairy_check" type="checkbox"></label><br>
+	<input type="hidden" name="no_meat" value="false">	
+	
+	<label> No Nuts <input name="no_nuts_check" type="checkbox"></label><br>	
+	<input type="hidden" name="no_nuts" value="false">
+	
+	<label> No Shellfish <input name="no_shellfish_check" type="checkbox"></label><br>
+	<input type="hidden" name="no_shellfish" value="false">	
+	
+	<label> No Carbs <input name="no_carbs_check" type="checkbox"></label><br>	
+	<input type="hidden" name="no_carbs" value="false">
+	
+	<label> No Animal Products <input name="no_animal_products_check" type="checkbox"></label><br>
+	<input type="hidden" name="no_animal_products" value="false">
+	
+	<label> No Gluten <input name="no_gluten_check" type="checkbox"></label><br>	
+	<input type="hidden" name="no_gluten" value="false">
+	
+	<label> No Soy <input name="no_soy_check" type="checkbox"></label><br>
+	<input type="hidden" name="no_soy" value="false">
+	
 	<input type="submit" value="Save Changes" >
 </form>
 
 <form id="user_delete" align="center">
 	<input type="submit" value="Delete Account">
 </form >
-
-<script src="/js/user_ajax.js"></script>

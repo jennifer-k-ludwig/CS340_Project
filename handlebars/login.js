@@ -11,12 +11,15 @@ module.exports = function(){
 
 	router.post('/', function(req,res){
 		
+		var mysql = req.app.get('mysql');
 		req.session.id = mysql.pool.query('SELECT user_id FROM users WHERE email_address=? AND password=?', [req.body.email_address, req.body.password], 
-			function(err, result){
+			function(err, results, fields){
 				if(err){
 					next(err);
 					return;
 				}
+				
+			return results;
 		});	
 
 	});

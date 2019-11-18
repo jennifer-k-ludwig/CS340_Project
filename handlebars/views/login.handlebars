@@ -1,13 +1,11 @@
-<form id="login_form" align="center">
+<form id="login_form" align="center" action="/login" method="post">
 	Username: 
-	<input id="username" type="email"><br>
+	<input name="email_address" type="email"><br>
 	Password:
-	<input id="password" type="password"><br>
+	<input name="password" type="password"><br>
 	<input type="submit" value="Login">
 </form>
 
-<form id="new_user_form" align="center" method="GET" action="http://flip3.engr.oregonstate.edu:7296/user">
+<form id="new_user_form" align="center" method="GET" action="/user">
 	<input type="submit" value="New User">
 </form>
-
-<script src="/js/login_ajax.js"></script>
