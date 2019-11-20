@@ -11,7 +11,7 @@ module.exports = function() {
                 res.write(JSON.stringify(error));
                 res.end();
 			}
-			console.log("Diets");
+			console.log("Diets Results");
 			console.log(results);
 			console.log('\n');
 
@@ -29,7 +29,7 @@ module.exports = function() {
                 res.write(JSON.stringify(error));
                 res.end();
 			}
-			console.log("Recipes");
+			console.log("Recipes Results");
 			console.log(results);
 			console.log('\n');
 
