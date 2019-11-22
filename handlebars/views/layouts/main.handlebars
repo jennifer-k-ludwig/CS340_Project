@@ -4,7 +4,10 @@
 		<meta charset="UTF-8">
 		<meta name="author" content="Jennifer Ludwig and Brian Dong">
 		<title>Meal Planning Database</title>
-		<link rel="stylesheet" href="/css/style.css" type="text/css">
+		<link rel="stylesheet" href="/static/css/style.css" type="text/css">
+		{{#each jsscripts}}
+    		<script src="/static/{{this}}"></script>
+    	{{/each}}
 	</head>
 	<body>
 		<a class="link" href="http://flip3.engr.oregonstate.edu:7296/home">Home</a>
