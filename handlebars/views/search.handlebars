@@ -10,7 +10,9 @@ to anywhere. Our function search_foods_or_recipes() redirects us-->
 	<input type="button" value="Search" onclick="search_foods_or_recipes()">
 </form>
 
-
+<!-- These are the tables where our search results go
+Using handlebars to hide the displays until the user decides to search
+-->
 <div id="search_results">
 	<h2 align="center">Search results... </h2>
 	{{#if display_food}}
