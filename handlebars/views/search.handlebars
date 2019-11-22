@@ -1,14 +1,85 @@
+<!-- Form to search for a food or recipe. Form does not send
+to anywhere. Our function search_foods_or_recipes() redirects us-->
 <h3 align="center">Search for a food or recipe</h3>
-<form align="center" action="" method="">
+<form align="center" action="" method="" onsubmit="search_foods_or_recipes(); return false;">
 	<label> Type: <select name="food_or_recipe">
 		<option value="food">Food</option>
 		<option value="recipe">Recipe</option></select>
 	</label>
-	<label> Name: <input type="search" name="user_input_search"></label>	
+	<label> Name: <input id ="searchbar" name="user_input_search" type="search" placeholder="Leave blank to search all of a specific type"></label>	
 	<input type="button" value="Search" onclick="search_foods_or_recipes()">
 </form>
+
+
 <div id="search_results">
-	<!--Search results go here-->
+	<h2 align="center">Search results... </h2>
+	{{#if display_food}}
+		<table align="center">
+			<thead>
+				<th>Food</th>
+				<th>Calories per Ounce</th>
+				<th>Meat</th>
+				<th>Dairy</th>
+				<th>Nuts</th>
+				<th>Shellfish</th>
+				<th>Carbs</th>
+				<th>Animal Products</th>
+				<th>Gluten</th>  
+				<th>Soy</th> 
+			</thead> 
+
+			<tbody>
+				{{#each food}}
+				<tr>
+					<td>{{food_name}}</td>
+					<td>{{calories_ounce}}</td>
+					<td>{{contains_meat}}</td>
+					<td>{{contains_dairy}}</td>
+					<td>{{contains_nuts}}</td>
+					<td>{{contains_shellfish}}</td>
+					<td>{{contains_carbs}}</td>
+					<td>{{contains_animal_products}}</td>
+					<td>{{contains_gluten}}</td>
+					<td>{{contains_soy}}</td>
+				</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	{{else}}
+	{{/if}}
+	
+	{{#if display_recipe}}
+		<table align="center">
+			<thead>
+				<th>Recipe</th>
+				<th>Meat</th>
+				<th>Dairy</th>
+				<th>Nuts</th>
+				<th>Shellfish</th>
+				<th>Carbs</th>
+				<th>Animal Products</th>
+				<th>Gluten</th>  
+				<th>Soy</th> 
+			</thead> 
+
+			<tbody>
+				{{#each recipe}}
+				<tr>
+					<td>{{recipe_name}}</td>
+					<td>{{recipe_no_meat}}</td>
+					<td>{{recipe_no_dairy}}</td>
+					<td>{{recipe_no_nuts}}</td>
+					<td>{{recipe_no_shellfish}}</td>
+					<td>{{recipe_no_carbs}}</td>
+					<td>{{recipe_no_animal_products}}</td>
+					<td>{{recipe_no_gluten}}</td>
+					<td>{{recipe_no_soy}}</td>
+				</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	{{else}}	
+	{{/if}}
 </div>
 
 <br>
@@ -120,30 +191,12 @@
 </form>
 </body>
 
-<script>
+{{!-- <script>
 	function addIngredient() {
 		var x = document.createElement('div');
 		x.innerHTML = "Ingredient: <input type ='text'> <br>";
 		document.getElementById('ingredients').appendChild(x);
 	};
 
-</script>
+</script> --}}
 
-<script>
-/* This function gets the user's input on the search bar which we will use to search our DB with
-We have a toggle between "Food" and "Recipe". We store the user's choice in a variable called
-food_or_recipe which we will later use in search.js to deciper which table to search.
-*/
-function search_foods_or_recipes() {
-
-    var food_or_recipe = document.getElementsByName("food_or_recipe")[0].value;
-    var user_search_input = document.getElementsByName("user_input_search")[0].value;
-
-    console.log("Search Type and User Search Input \n");
-    console.log(food_or_recipe);
-    console.log(user_search_input);
-    //construct the URL and redirect to it
-    window.location = '/search/' + encodeURI(food_or_recipe + '_' + user_search_input);   
-}
-
-</script>
