@@ -30,7 +30,7 @@ module.exports = function() {
 				context.display_food = true;
 
 				context.food = results;
-				complete("food");
+				complete();
 	
 			});
 		}
@@ -54,7 +54,7 @@ module.exports = function() {
 				context.display_recipe = true;
 
 				context.recipe = results;
-				complete("recipe");
+				complete();
 	
 			});
 		}
@@ -140,14 +140,10 @@ module.exports = function() {
 		context.jsscripts = ["searchbar.js"];
 		var mysql = req.app.get('mysql');
 		searchInput (req, res, mysql, context, complete);
-		function complete(food_or_recipe){
+		function complete(){
 			callbackCount++;
 			if(callbackCount >= 1){
-				if (food_or_recipe === "food")
-				{	
-					res.render('search', context);
-				}
-				else res.render('search', context);
+				res.render('search', context);
 			}
 
 		}
