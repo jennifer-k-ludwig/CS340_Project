@@ -12,16 +12,19 @@ module.exports = function(){
 	router.post('/', function(req,res){
 		
 		var mysql = req.app.get('mysql');
-		req.session.id = mysql.pool.query('SELECT user_id FROM users WHERE email_address=? AND password=?', [req.body.email_address, req.body.password], 
-			function(err, results, fields){
-				if(err){
-					next(err);
-					return;
+		var session = req.app.get('session');
+		
+		mysql.pool.query('SELECT user_id FROM users WHERE email_address=? AND password=?', [req.body.email_address, req.body.password], 
+			function(error, results, fields){
+				if(error){
+					res.write(JSON.stringify(error));
+					res.end();
 				}
-				
-			return results;
-		});	
-
+				else{
+					req.session.user_id = results[0].user_id;
+					res.redirect('/home');
+				}
+		});
 	});
 	
 	return router;

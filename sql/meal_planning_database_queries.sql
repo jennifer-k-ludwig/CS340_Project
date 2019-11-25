@@ -24,8 +24,8 @@ SELECT
 	diet_no_carbs,
 	diet_no_animal_products,
 	diet_no_gluten,diet_no_soy 
-FROM users 
-LEFT JOIN diets ON users.diet=diet.diet_id WHERE user_id=?;
+FROM diets
+INNER JOIN users ON users.diet=diets.diet_id AND user_id=?;
 
 --Pull the user's current recipe selection from the database.
 SELECT 
@@ -39,7 +39,7 @@ INNER JOIN users ON users_recipes.user = users.user_id WHERE user_id=?;
 --
 
 --"Save Changes" will insert the new user and their diet into the database on first click.
-INSERT INTO `diet`
+INSERT INTO `diets`
 	(`diet_no_meat`,
 	`diet_no_dairy`,
 	`diet_no_nuts`,
@@ -66,7 +66,7 @@ VALUES (?,?,?,?,?,?,?);
 
 --"Save Changes" will update the user info.
 UPDATE 
-	diet 
+	diets
 SET 
 	diet_no_meat=?,
 	diet_no_dairy=?,
@@ -76,10 +76,10 @@ SET
 	diet_no_animal_products-=?,
 	diet_no_gluten=?,
 	diet_no_soy=? 
-WHERE diet.diet_id=req.session.diet_id;
+WHERE diets.diet_id=req.session.diet_id;
 
 UPDATE 
-	user 
+	users
 SET 
 	first_name=?,
 	last_name=?,
@@ -88,10 +88,10 @@ SET
 	password=?,
 	max_calories=?,
 	diet=? 
-WHERE user.user_id=req.session.user_id;
+WHERE users.user_id=req.session.user_id;
 
 --"Delete Account" will delete the user from the database.
-DELETE FROM users WHERE user.user_id=req.session.user_id;
+DELETE FROM users WHERE users.user_id=req.session.user_id;
 
 --
 --Search page

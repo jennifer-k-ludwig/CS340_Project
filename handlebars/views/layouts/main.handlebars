@@ -4,12 +4,13 @@
 		<meta charset="UTF-8">
 		<meta name="author" content="Jennifer Ludwig and Brian Dong">
 		<title>Meal Planning Database</title>
-		<link rel="stylesheet" href="/css/style.css" type="text/css">
+		<link rel="stylesheet" href="/static/css/style.css" type="text/css">
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+		{{#each jsscripts}}
+    		<script src="/static/{{this}}"></script>
+    	{{/each}}
 	</head>
 	<body>
-		<a class="link" href="/home">Home</a>
-		<a class="link" href="/search">Search</a>
-		<a class="link" href="/user">Account Settings</a>
 		<h1 align="center">Meal Planning Database</h1>
 		{{{body}}}
 	</body>

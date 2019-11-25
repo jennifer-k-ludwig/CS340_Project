@@ -12,14 +12,14 @@ DROP TABLE IF EXISTS diets;
 
 CREATE TABLE `diets` (
 	`diet_id` INT(11) NOT NULL AUTO_INCREMENT,
-	`diet_no_meat` BOOLEAN DEFAULT FALSE NOT NULL,
-	`diet_no_dairy` BOOLEAN DEFAULT FALSE NOT NULL,
-	`diet_no_nuts` BOOLEAN DEFAULT FALSE NOT NULL,
-	`diet_no_shellfish` BOOLEAN DEFAULT FALSE NOT NULL,
-	`diet_no_carbs` BOOLEAN DEFAULT FALSE NOT NULL,
-	`diet_no_animal_products` BOOLEAN DEFAULT FALSE NOT NULL,
-	`diet_no_gluten` BOOLEAN DEFAULT FALSE NOT NULL,
-	`diet_no_soy` BOOLEAN DEFAULT FALSE NOT NULL,	
+	`diet_no_meat` BOOLEAN DEFAULT FALSE,
+	`diet_no_dairy` BOOLEAN DEFAULT FALSE,
+	`diet_no_nuts` BOOLEAN DEFAULT FALSE,
+	`diet_no_shellfish` BOOLEAN DEFAULT FALSE,
+	`diet_no_carbs` BOOLEAN DEFAULT FALSE,
+	`diet_no_animal_products` BOOLEAN DEFAULT FALSE,
+	`diet_no_gluten` BOOLEAN DEFAULT FALSE,
+	`diet_no_soy` BOOLEAN DEFAULT FALSE,	
 	PRIMARY KEY (`diet_id`)
 );
 

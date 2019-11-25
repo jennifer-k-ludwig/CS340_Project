@@ -1,18 +1,5 @@
-<form action="/home" method="GET">
-	<input type="submit" value="Home">
-</form>
-<form action="/search" method="GET">
-	<input type="submit" value="Search">
-</form>
-<form action="/user" method="GET">
-	<input type="submit" value="Account Settings">
-</form>
-<form action="/home" method="POST">
-	<input type="submit" name="log_out" value="Log Out">
-</form>
-		
 <h2 align="center">User Settings</h2>
-<form id="update_info" align="center" action="/user" method="post">
+<form id="user_info" align="center" action="/new_user" method="post">
 	<label> First Name: <input name="first_name" type="text"></label><br>
 	<label> Last Name: <input name="last_name" type="text"></label><br>
 	<label> Birth Date: <input name="birth_date" type="date"></label><br>
@@ -37,9 +24,5 @@
 	
 	<label> No Soy <input name="no_soy" value="1" type="checkbox"></label><br>
 	
-	<input type="submit" name="update" value="Update Account" >
+	<input type="submit" value="Create Account" >
 </form>
-
-<form id="delete_info" align="center" action="/user" method="post">
-	<input type="submit" name="delete" value="Delete Account">
-</form >

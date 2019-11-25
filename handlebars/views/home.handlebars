@@ -1,5 +1,21 @@
+
+<form action="/home" method="GET">
+	<input type="submit" value="Home">
+</form>
+<form action="/search" method="GET">
+	<input type="submit" value="Search">
+</form>
+<form action="/user" method="GET">
+	<input type="submit" value="Account Settings">
+</form>
+<form action="/home" method="POST">
+	<input type="submit" name="log_out" value="Log Out">
+</form>
+
+<h2 align="center">Welcome back, {{first_name}}!</h2>
+
 <h3 align="center">Want to add more recipes to your plan?</h3>
-<form align="center" action="/search">
+<form align="center" action="http://flip3.engr.oregonstate.edu:7296/search">
 	<input type="submit" value="Search for more recipes!">
 </form>
 </div>
@@ -7,7 +23,6 @@
 <h2 align="center">Your diet selections...</h2>
 	<table align="center">
 		<thead>
-			<th>Diet ID</th>
 			<th>No Meat</th>
 			<th>No Dairy</th>
 			<th>No Nuts</th>
@@ -21,7 +36,6 @@
 		<tbody>
 			{{#each diet}}
 			<tr>
-				<td>{{diet_id}}</td>
 				<td>{{diet_no_meat}}</td>
 				<td>{{diet_no_dairy}}</td>
 				<td>{{diet_no_nuts}}</td>
@@ -42,14 +56,12 @@
 
 	<table align="center">
 		<thead>
-			<th>Recipe ID</th>
 			<th>Recipe Name</th>
 		</thead>
 
 		<tbody>
 			{{#each recipes}}
 			<tr>
-				<td>{{recipe_id}}</td>
 				<td>{{recipe_name}}</td>
 			</tr>
 			{{/each}}

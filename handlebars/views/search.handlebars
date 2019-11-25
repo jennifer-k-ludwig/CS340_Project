@@ -1,11 +1,100 @@
-<h3 align="center">Search for a food or recipe</h3>
-<form align="center" method="POST">
-	<label> Type: <select><option value="food">Food</option><option value="recipe">Recipe</option></select></label>
-	<label> Name: <input type="search"></label>	
+<form action="/home" method="GET">
+	<input type="submit" value="Home">
+</form>
+<form action="/search" method="GET">
 	<input type="submit" value="Search">
 </form>
-<div id="results">
-	<!--Search results go here-->
+<form action="/user" method="GET">
+	<input type="submit" value="Account Settings">
+</form>
+<form action="/home" method="POST">
+	<input type="submit" name="log_out" value="Log Out">
+</form>
+
+<!-- Form to search for a food or recipe. Form does not send
+to anywhere. Our function search_foods_or_recipes() redirects us-->
+<h3 align="center">Search for a food or recipe</h3>
+<form align="center" action="" method="" onsubmit="search_foods_or_recipes(); return false;">
+	<label> Type: <select name="food_or_recipe">
+		<option value="food">Food</option>
+		<option value="recipe">Recipe</option></select>
+	</label>
+	<label> Name: <input id ="searchbar" name="user_input_search" type="search" placeholder="Leave blank to search all of a specific type"></label>	
+	<input type="button" value="Search" onclick="search_foods_or_recipes()">
+</form>
+
+<!-- These are the tables where our search results go
+Using handlebars to hide the displays until the user decides to search
+-->
+<div id="search_results">
+	<h2 align="center">Search results... </h2>
+	{{#if display_food}}
+		<table align="center">
+			<thead>
+				<th>Food</th>
+				<th>Calories per Ounce</th>
+				<th>Meat</th>
+				<th>Dairy</th>
+				<th>Nuts</th>
+				<th>Shellfish</th>
+				<th>Carbs</th>
+				<th>Animal Products</th>
+				<th>Gluten</th>  
+				<th>Soy</th> 
+			</thead> 
+
+			<tbody>
+				{{#each food}}
+				<tr>
+					<td>{{food_name}}</td>
+					<td>{{calories_ounce}}</td>
+					<td>{{contains_meat}}</td>
+					<td>{{contains_dairy}}</td>
+					<td>{{contains_nuts}}</td>
+					<td>{{contains_shellfish}}</td>
+					<td>{{contains_carbs}}</td>
+					<td>{{contains_animal_products}}</td>
+					<td>{{contains_gluten}}</td>
+					<td>{{contains_soy}}</td>
+				</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	{{else}}
+	{{/if}}
+	
+	{{#if display_recipe}}
+		<table align="center">
+			<thead>
+				<th>Recipe</th>
+				<th>Meat</th>
+				<th>Dairy</th>
+				<th>Nuts</th>
+				<th>Shellfish</th>
+				<th>Carbs</th>
+				<th>Animal Products</th>
+				<th>Gluten</th>  
+				<th>Soy</th> 
+			</thead> 
+
+			<tbody>
+				{{#each recipe}}
+				<tr>
+					<td>{{recipe_name}}</td>
+					<td>{{recipe_no_meat}}</td>
+					<td>{{recipe_no_dairy}}</td>
+					<td>{{recipe_no_nuts}}</td>
+					<td>{{recipe_no_shellfish}}</td>
+					<td>{{recipe_no_carbs}}</td>
+					<td>{{recipe_no_animal_products}}</td>
+					<td>{{recipe_no_gluten}}</td>
+					<td>{{recipe_no_soy}}</td>
+				</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	{{else}}	
+	{{/if}}
 </div>
 
 <br>
@@ -117,11 +206,12 @@
 </form>
 </body>
 
-<script>
+{{!-- <script>
 	function addIngredient() {
 		var x = document.createElement('div');
 		x.innerHTML = "Ingredient: <input type ='text'> <br>";
 		document.getElementById('ingredients').appendChild(x);
 	};
 
-</script>
+</script> --}}
+
