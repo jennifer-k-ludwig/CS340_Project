@@ -1,4 +1,20 @@
-
-#searchbar {
+#user_input_search {
     width: 50em;
+}
 
+#updatePropertiesForm{
+  display:none;
+}
+
+.search_url_path {
+    display: none;
+}
+
+th {
+    border: 1px solid black;
+    text-align: center;
+}
+  
+td {
+    text-align: center;
+}
