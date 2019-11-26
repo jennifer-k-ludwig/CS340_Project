@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 /* This function gets the user's input on the search bar which we will use to search our DB with
 We have a toggle between "Food" and "Recipe". We store the user's choice in a variable called
 food_or_recipe which we will later use in search.js to deciper which table to search.
@@ -11,7 +11,7 @@ function search_foods_or_recipes() {
     //construct the URL and redirect to it
     window.location = '/search/' + encodeURI(food_or_recipe + user_search_input);   
 }
-=======
+
 /* This function gets the user's input on the search bar which we will use to search our DB with
 We have a toggle between "Food" and "Recipe". We store the user's choice in a variable called
 food_or_recipe which we will later use in search.js to deciper which table to search.
@@ -24,4 +24,4 @@ function search_foods_or_recipes() {
     //construct the URL and redirect to it
     window.location = '/search/' + encodeURI(food_or_recipe + user_search_input);   
 }
->>>>>>> 4b76a9d4497a1092b7fda1e93e02e1816394fa4e
+
