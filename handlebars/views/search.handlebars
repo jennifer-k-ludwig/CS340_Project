@@ -1,35 +1,26 @@
-
-<form action="/home" method="GET">
-	<input type="submit" value="Home">
-</form>
-<form action="/search" method="GET">
-	<input type="submit" value="Search">
-</form>
-<form action="/user" method="GET">
-	<input type="submit" value="Account Settings">
-</form>
-<form action="/home" method="POST">
-	<input type="submit" name="log_out" value="Log Out">
-</form>
-
 <!-- Form to search for a food or recipe. Form does not send
 to anywhere. Our function search_foods_or_recipes() redirects us-->
 <h3 align="center">Search for a food or recipe</h3>
 <form align="center" action="" method="" onsubmit="search_foods_or_recipes(); return false;">
-	<label> Type: <select name="food_or_recipe">
+	<label> Type: <select id="food_or_recipe">
 		<option value="food">Food</option>
 		<option value="recipe">Recipe</option></select>
 	</label>
-	<label> Name: <input id ="searchbar" name="user_input_search" type="search" placeholder="Leave blank to search all of a specific type"></label>	
+	<label> Name: <input id ="user_input_search" type="search" placeholder="Leave blank to search all of a specific type"></label>	
 	<input type="button" value="Search" onclick="search_foods_or_recipes()">
 </form>
 
+
+<!-----------------------------  DISPLAY SEARCH RESULTS SECTION -------------------------->
 <!-- These are the tables where our search results go
 Using handlebars to hide the displays until the user decides to search
 -->
 <div id="search_results">
-	<h2 align="center">Search results... </h2>
+	<div class="url_search_path" id="user_search_type" value="{{user_search_type}}"></div>
+	<div class="url_search_path" id="user_search_text" value="{{user_search_text}}"></div>
+
 	{{#if display_food}}
+	<h2 align="center">Search results... </h2>
 		<table align="center">
 			<thead>
 				<th>Food</th>
@@ -41,7 +32,8 @@ Using handlebars to hide the displays until the user decides to search
 				<th>Carbs</th>
 				<th>Animal Products</th>
 				<th>Gluten</th>  
-				<th>Soy</th> 
+				<th>Soy</th>
+				<th>Delete Food from Database</th>
 			</thead> 
 
 			<tbody>
@@ -57,6 +49,7 @@ Using handlebars to hide the displays until the user decides to search
 					<td>{{contains_animal_products}}</td>
 					<td>{{contains_gluten}}</td>
 					<td>{{contains_soy}}</td>
+					<td> <button class = "deleteFoodButton" value="{{food_id}}"> Delete Food </button></td>
 				</tr>
 				{{/each}}
 			</tbody>
@@ -65,7 +58,8 @@ Using handlebars to hide the displays until the user decides to search
 	{{/if}}
 	
 	{{#if display_recipe}}
-		<table align="center">
+	<h2 align="center">Search results... </h2>
+		<table align="center" id = "recipe_table">
 			<thead>
 				<th>Recipe</th>
 				<th>Meat</th>
@@ -75,7 +69,12 @@ Using handlebars to hide the displays until the user decides to search
 				<th>Carbs</th>
 				<th>Animal Products</th>
 				<th>Gluten</th>  
-				<th>Soy</th> 
+				<th>Soy</th>
+				<th>Show Ingredients</th> 
+				<th>Update Ingredients</th>
+				<th>Update Recipe Properties</th>
+				<th>Add to your recipe list</th>
+				<th>Delete Recipe from Database</th> 
 			</thead> 
 
 			<tbody>
@@ -90,335 +89,328 @@ Using handlebars to hide the displays until the user decides to search
 					<td>{{recipe_no_animal_products}}</td>
 					<td>{{recipe_no_gluten}}</td>
 					<td>{{recipe_no_soy}}</td>
+					<td> <button class = "showIngredientsButton" value="{{recipe_id}}"> Show Ingredients </button></td>
+					<td> <button class = "updateIngredientsButton" value="{{recipe_id}}"> Update Ingredients </td>
+					<td> <button class = "updateRecipePropButton" value="{{recipe_id}}"> Update Recipe </button></td>
+					<td> <button class = "addRecipeToUserListButton" value="{{recipe_id}}"> Add </button></td>
+					<td> <button class = "deleteRecipeButton" value="{{recipe_id}}"> Delete </button></td>
 				</tr>
 				{{/each}}
 			</tbody>
 		</table>
+		<br> <br>
 	{{else}}	
 	{{/if}}
 </div>
 
-<br>
-<br>
-<hr size="3" noshade>
-<h3 align="center">Don't see a food? Add one!</h3>
-<form align="center" method="POST">
-	<label> Name: <input type="text"></label>	
-	<input type="submit" value="Add Food!"><br>
-	Dietary Properties:<br>
-	<label> Does it contain meat? 
-		<input type="radio" name="meat" value="yes">Yes </label>
-		<input type="radio" name="meat" value="no">No </label>	
-		<br>
-	<label> Does it contain dairy?</label>
-	<input type="radio" name="dairy" value="yes">Yes </label>
-		<input type="radio" name="dairy" value="no">No </label>
-		<br>	
-	<label> Does it contain nuts?</label>
-	<input type="radio" name="nuts" value="yes">Yes </label>
-		<input type="radio" name="nuts" value="no">No </label>
-		<br>	
-	<label> Does it contain shellfish?</label>
-		<input type="radio" name="shellfish" value="yes">Yes </label>
-		<input type="radio" name="shellfish" value="no">No </label>
-		<br>	
-	<label> Does it contain carbs?</label>
-		<input type="radio" name="carbs" value="yes">Yes </label>
-		<input type="radio" name="carbs" value="no">No </label>
-		<br>	
-	<label> Does it contain animal products?</label>
-		<input type="radio" name="animal" value="yes">Yes </label>
-		<input type="radio" name="animal" value="no">No </label>
-		<br>	
-	<label> Does it contain gluten?</label>
-		<input type="radio" name="gluten" value="yes">Yes </label>
-		<input type="radio" name="gluten" value="no">No </label>
-		<br>	
-	<label> Does it contain soy?</label>
-		<input type="radio" name="soy" value="yes">Yes </label>
-		<input type="radio" name="soy" value="no">No </label>
-		<br>
-	<label> How many calories per ounce?</label>
-		<label><input type="text" name="calories"> </label>		
-</form>
-<br>
-<br>
-<hr size="3" noshade>
-<h3 align="center">Don't see a recipe? Build one!</h3>
-<h4 align="center">Search for an ingredient to add to the recipe</h4>
-<form align="center" method="POST">
-	Ingredient Properties:<br>
-	<label> Does it contain meat? 
-		<input type="radio" name="meat" value="yes">Yes </label>
-		<input type="radio" name="meat" value="no">No </label>	
-		<br>
-	<label> Does it contain dairy?</label>
-	<input type="radio" name="dairy" value="yes">Yes </label>
-		<input type="radio" name="dairy" value="no">No </label>
-		<br>	
-	<label> Does it contain nuts?</label>
-	<input type="radio" name="nuts" value="yes">Yes </label>
-		<input type="radio" name="nuts" value="no">No </label>
-		<br>	
-	<label> Does it contain shellfish?</label>
-		<input type="radio" name="shellfish" value="yes">Yes </label>
-		<input type="radio" name="shellfish" value="no">No </label>
-		<br>	
-	<label> Does it contain carbs?</label>
-		<input type="radio" name="carbs" value="yes">Yes </label>
-		<input type="radio" name="carbs" value="no">No </label>
-		<br>	
-	<label> Does it contain animal products?</label>
-		<input type="radio" name="animal" value="yes">Yes </label>
-		<input type="radio" name="animal" value="no">No </label>
-		<br>	
-	<label> Does it contain gluten?</label>
-		<input type="radio" name="gluten" value="yes">Yes </label>
-		<input type="radio" name="gluten" value="no">No </label>
-		<br>	
-	<label> Does it contain soy?</label>
-		<input type="radio" name="soy" value="yes">Yes </label>
-		<input type="radio" name="soy" value="no">No </label>
-		<br>
-	<input type="submit" value="Search!"><br>	
-</form>
-<br><br>
-<div align="center">(Display search results here...)</div>
-<br><br>
-<h4 align="center">Type the ingredient name below!</h4>
-<div align="center">
-	<button onclick="addIngredient()">Add ingredient</button> <br>
-</div>
-<form class = "ingredients_form" align="center" method="POST">
-	<div id = "ingredients"> 
-		<div> Ingredient: <input type="text"></div> 
-	</div> 
-	<input type="submit" value="Add Recipe!">
-</form>
-
-<br><br><br>
-<hr size="3" noshade>
-<h3 align="center">Don't like a recipe? Delete it!</h3>
-<form class = "ingredients_form" align="center" method="POST">
-	<div id = "recipes"> 
-		<div> Recipe Name: <input type="text"></div> 
-	</div> 
-	<input type="submit" value="Delete Recipe!">
-</form>
-</body>
-
-{{!-- <script>
-	function addIngredient() {
-		var x = document.createElement('div');
-		x.innerHTML = "Ingredient: <input type ='text'> <br>";
-		document.getElementById('ingredients').appendChild(x);
-	};
-
-</script> --}}
-
-=======
-<!-- Form to search for a food or recipe. Form does not send
-to anywhere. Our function search_foods_or_recipes() redirects us-->
-<h3 align="center">Search for a food or recipe</h3>
-<form align="center" action="" method="" onsubmit="search_foods_or_recipes(); return false;">
-	<label> Type: <select name="food_or_recipe">
-		<option value="food">Food</option>
-		<option value="recipe">Recipe</option></select>
-	</label>
-	<label> Name: <input id ="searchbar" name="user_input_search" type="search" placeholder="Leave blank to search all of a specific type"></label>	
-	<input type="button" value="Search" onclick="search_foods_or_recipes()">
-</form>
-
-<!-- These are the tables where our search results go
-Using handlebars to hide the displays until the user decides to search
--->
-<div id="search_results">
-	<h2 align="center">Search results... </h2>
-	{{#if display_food}}
-		<table align="center">
+<div>
+	{{#if display_ingredients}}
+		<h2 align="center"> {{user_recipe}}'s Ingredients </h2>
+		<table align="center" id = "recipe_table">
 			<thead>
 				<th>Food</th>
-				<th>Calories per Ounce</th>
-				<th>Meat</th>
-				<th>Dairy</th>
-				<th>Nuts</th>
-				<th>Shellfish</th>
-				<th>Carbs</th>
-				<th>Animal Products</th>
-				<th>Gluten</th>  
-				<th>Soy</th> 
+				<th>Calories Per Ounce</th>
 			</thead> 
 
 			<tbody>
-				{{#each food}}
+				{{#each ingredient}}
 				<tr>
 					<td>{{food_name}}</td>
 					<td>{{calories_ounce}}</td>
-					<td>{{contains_meat}}</td>
-					<td>{{contains_dairy}}</td>
-					<td>{{contains_nuts}}</td>
-					<td>{{contains_shellfish}}</td>
-					<td>{{contains_carbs}}</td>
-					<td>{{contains_animal_products}}</td>
-					<td>{{contains_gluten}}</td>
-					<td>{{contains_soy}}</td>
 				</tr>
 				{{/each}}
 			</tbody>
 		</table>
+		
 	{{else}}
 	{{/if}}
-	
-	{{#if display_recipe}}
-		<table align="center">
-			<thead>
-				<th>Recipe</th>
-				<th>Meat</th>
-				<th>Dairy</th>
-				<th>Nuts</th>
-				<th>Shellfish</th>
-				<th>Carbs</th>
-				<th>Animal Products</th>
-				<th>Gluten</th>  
-				<th>Soy</th> 
-			</thead> 
 
-			<tbody>
-				{{#each recipe}}
-				<tr>
-					<td>{{recipe_name}}</td>
-					<td>{{recipe_no_meat}}</td>
-					<td>{{recipe_no_dairy}}</td>
-					<td>{{recipe_no_nuts}}</td>
-					<td>{{recipe_no_shellfish}}</td>
-					<td>{{recipe_no_carbs}}</td>
-					<td>{{recipe_no_animal_products}}</td>
-					<td>{{recipe_no_gluten}}</td>
-					<td>{{recipe_no_soy}}</td>
-				</tr>
-				{{/each}}
-			</tbody>
-		</table>
-	{{else}}	
+	{{#if no_display_ingredients}}
+		<h2 align="center"> {{user_recipe}}'s Ingredients </h2>
+		<div align="center">There are no foods associated with this recipe</div>
+	{{else}}
 	{{/if}}
+</div> 
+
+
+<!-----------------------------  UPDATE RECIPE SECTION -------------------------->
+<br>
+<br>
+<div id="updateProperties"> 
+	<div id="updatePropertiesForm">
+		<form id = "updateRecipeForm" align="center" action = "/recipe_update" method="POST">
+		Does it contain meat?
+		<select name="update_recipe_meat">
+			<option value=0>Yes</option> 
+			<option value=1>No</option>
+		</select>	 	
+		<br>
+
+		Does it contain dairy?
+		<select name="update_recipe_dairy">
+			<option value=0>Yes</option> 
+			<option value=1>No</option>  
+		</select>
+		<br>	
+
+		Does it contain nuts?
+		<select name="update_recipe_nuts">
+			<option value=0>Yes</option> 
+			<option value=1>No</option>  
+		</select>
+		<br>	
+
+		Does it contain shellfish?
+		<select name="update_recipe_shellfish">
+			<option value=0>Yes</option> 
+			<option value=1>No</option>  
+		</select>
+		<br>	
+
+		Does it contain carbs?
+		<select name="update_recipe_carbs">
+			<option value=0>Yes</option> 
+			<option value=1>No</option> 
+		</select>
+		<br>	
+
+		Does it contain animal products?
+		<select name="update_recipe_animal">
+			<option value=0>Yes</option> 
+			<option value=1>No</option>  
+		</select>
+		<br>	
+
+		Does it contain gluten?
+		<select name="update_recipe_gluten">
+			<option value=0>Yes</option> 
+			<option value=1>No</option> 
+		</select>
+		<br>	
+
+		Does it contain soy?
+		<select name="update_recipe_soy">
+			<option value=0>Yes</option> 
+			<option value=1>No</option> 
+		</select>
+		</form>
+		<br>
+		<button id = "sendRecipeUpdate" value=""> Save Changes </button>
+	</div>
 </div>
 
+
+<!-----------------------------  ADD FOOD SECTION -------------------------->
 <br>
 <br>
 <hr size="3" noshade>
 <h3 align="center">Don't see a food? Add one!</h3>
-<form align="center" method="POST">
-	<label> Name: <input type="text"></label>	
-	<input type="submit" value="Add Food!"><br>
-	Dietary Properties:<br>
-	<label> Does it contain meat? 
-		<input type="radio" name="meat" value="yes">Yes </label>
-		<input type="radio" name="meat" value="no">No </label>	
-		<br>
-	<label> Does it contain dairy?</label>
-	<input type="radio" name="dairy" value="yes">Yes </label>
-		<input type="radio" name="dairy" value="no">No </label>
-		<br>	
-	<label> Does it contain nuts?</label>
-	<input type="radio" name="nuts" value="yes">Yes </label>
-		<input type="radio" name="nuts" value="no">No </label>
-		<br>	
-	<label> Does it contain shellfish?</label>
-		<input type="radio" name="shellfish" value="yes">Yes </label>
-		<input type="radio" name="shellfish" value="no">No </label>
-		<br>	
-	<label> Does it contain carbs?</label>
-		<input type="radio" name="carbs" value="yes">Yes </label>
-		<input type="radio" name="carbs" value="no">No </label>
-		<br>	
-	<label> Does it contain animal products?</label>
-		<input type="radio" name="animal" value="yes">Yes </label>
-		<input type="radio" name="animal" value="no">No </label>
-		<br>	
-	<label> Does it contain gluten?</label>
-		<input type="radio" name="gluten" value="yes">Yes </label>
-		<input type="radio" name="gluten" value="no">No </label>
-		<br>	
-	<label> Does it contain soy?</label>
-		<input type="radio" name="soy" value="yes">Yes </label>
-		<input type="radio" name="soy" value="no">No </label>
-		<br>
-	<label> How many calories per ounce?</label>
-		<label><input type="text" name="calories"> </label>		
-</form>
-<br>
-<br>
-<hr size="3" noshade>
-<h3 align="center">Don't see a recipe? Build one!</h3>
-<h4 align="center">Search for an ingredient to add to the recipe</h4>
-<form align="center" method="POST">
-	Ingredient Properties:<br>
-	<label> Does it contain meat? 
-		<input type="radio" name="meat" value="yes">Yes </label>
-		<input type="radio" name="meat" value="no">No </label>	
-		<br>
-	<label> Does it contain dairy?</label>
-	<input type="radio" name="dairy" value="yes">Yes </label>
-		<input type="radio" name="dairy" value="no">No </label>
-		<br>	
-	<label> Does it contain nuts?</label>
-	<input type="radio" name="nuts" value="yes">Yes </label>
-		<input type="radio" name="nuts" value="no">No </label>
-		<br>	
-	<label> Does it contain shellfish?</label>
-		<input type="radio" name="shellfish" value="yes">Yes </label>
-		<input type="radio" name="shellfish" value="no">No </label>
-		<br>	
-	<label> Does it contain carbs?</label>
-		<input type="radio" name="carbs" value="yes">Yes </label>
-		<input type="radio" name="carbs" value="no">No </label>
-		<br>	
-	<label> Does it contain animal products?</label>
-		<input type="radio" name="animal" value="yes">Yes </label>
-		<input type="radio" name="animal" value="no">No </label>
-		<br>	
-	<label> Does it contain gluten?</label>
-		<input type="radio" name="gluten" value="yes">Yes </label>
-		<input type="radio" name="gluten" value="no">No </label>
-		<br>	
-	<label> Does it contain soy?</label>
-		<input type="radio" name="soy" value="yes">Yes </label>
-		<input type="radio" name="soy" value="no">No </label>
-		<br>
-	<input type="submit" value="Search!"><br>	
-</form>
-<br><br>
-<div align="center">(Display search results here...)</div>
-<br><br>
-<h4 align="center">Type the ingredient name below!</h4>
-<div align="center">
-	<button onclick="addIngredient()">Add ingredient</button> <br>
-</div>
-<form class = "ingredients_form" align="center" method="POST">
-	<div id = "ingredients"> 
-		<div> Ingredient: <input type="text"></div> 
-	</div> 
-	<input type="submit" value="Add Recipe!">
+<form align="center" action = "/search/food" method="POST">
+
+	Name: <input type="text" name="add_food_name" required>
+	<br>
+
+	How many calories per ounce?
+	<input type="number" name="add_food_calories" min="0"> 
+	<br>
+
+	Does it contain meat?
+	<input type="radio" name="add_food_meat" value=1>Yes 
+	<input type="radio" name="add_food_meat" value=0>No 	
+	<br>
+
+	Does it contain dairy?
+	<input type="radio" name="add_food_dairy" value=1>Yes 
+	<input type="radio" name="add_food_dairy" value=0>No 
+	<br>	
+
+	Does it contain nuts?
+	<input type="radio" name="add_food_nuts" value=1>Yes 
+	<input type="radio" name="add_food_nuts" value=0>No 
+	<br>	
+
+	Does it contain shellfish?
+	<input type="radio" name="add_food_shellfish" value=1>Yes 
+	<input type="radio" name="add_food_shellfish" value=0>No 
+	<br>	
+
+	Does it contain carbs?
+	<input type="radio" name="add_food_carbs" value=1>Yes 
+	<input type="radio" name="add_food_carbs" value=0>No 
+	<br>	
+
+	Does it contain animal products?
+	<input type="radio" name="add_food_animal" value=1>Yes 
+	<input type="radio" name="add_food_animal" value=0>No 
+	<br>	
+
+	Does it contain gluten?
+	<input type="radio" name="add_food_gluten" value=1>Yes 
+	<input type="radio" name="add_food_gluten" value=0>No 
+	<br>	
+
+	Does it contain soy?
+	<input type="radio" name="add_food_soy" value=1>Yes 
+	<input type="radio" name="add_food_soy" value=0>No 
+	<br>
+
+	<input type="submit" value="Add Food!"><br>			
 </form>
 
-<br><br><br>
+<!-----------------------------  ADD RECIPE SECTION -------------------------->
+<br>
+<br>
 <hr size="3" noshade>
-<h3 align="center">Don't like a recipe? Delete it!</h3>
-<form class = "ingredients_form" align="center" method="POST">
-	<div id = "recipes"> 
-		<div> Recipe Name: <input type="text"></div> 
-	</div> 
-	<input type="submit" value="Delete Recipe!">
+<h3 align="center">Don't see a recipe? Add one!</h3>
+<form align="center" action = "/search/recipe" method="POST">
+
+	Name: <input type="text" name="add_recipe_name" required>
+	<br>
+
+	Does it contain meat?
+	<input type="radio" name="add_recipe_meat" value=0>Yes 
+	<input type="radio" name="add_recipe_meat" value=1>No 	
+	<br>
+
+	Does it contain dairy?
+	<input type="radio" name="add_recipe_dairy" value=0>Yes 
+	<input type="radio" name="add_recipe_dairy" value=1>No 
+	<br>	
+
+	Does it contain nuts?
+	<input type="radio" name="add_recipe_nuts" value=0>Yes 
+	<input type="radio" name="add_recipe_nuts" value=1>No 
+	<br>	
+
+	Does it contain shellfish?
+	<input type="radio" name="add_recipe_shellfish" value=0>Yes 
+	<input type="radio" name="add_recipe_shellfish" value=1>No 
+	<br>	
+
+	Does it contain carbs?
+	<input type="radio" name="add_recipe_carbs" value=0>Yes 
+	<input type="radio" name="add_recipe_carbs" value=1>No 
+	<br>	
+
+	Does it contain animal products?
+	<input type="radio" name="add_recipe_animal" value=0>Yes 
+	<input type="radio" name="add_recipe_animal" value=1>No 
+	<br>	
+
+	Does it contain gluten?
+	<input type="radio" name="add_recipe_gluten" value=0>Yes 
+	<input type="radio" name="add_recipe_gluten" value=1>No 
+	<br>	
+
+	Does it contain soy?
+	<input type="radio" name="add_recipe_soy" value=0>Yes 
+	<input type="radio" name="add_recipe_soy" value=1>No 
+	<br>
+
+	<input type="submit" value="Add Recipe!"><br>			
 </form>
+<br><br>
+
+<!-----------------------------  MISCELLANOUS STUFF RIGHT NOW -------------------------->
+{{!-- <br>
+<br>
+<hr size="3" noshade>
+<h4 align="center">Search for a food in our Database to add to your recipe</h4>
+<form align="center" action="" method="" onsubmit="search_foods(); return false;">
+	<h5>Ingredient Properties:</h5>
+
+	Does it contain meat?
+	<input type="radio" name="search_food_meat" value=1>Yes 
+	<input type="radio" name="search_food_meat" value=0 checked>No
+	<br>
+
+	Does it contain dairy?
+	<input type="radio" name="search_food_dairy" value=1>Yes 
+	<input type="radio" name="search_food_dairy" value=0 checked>No 
+	<br>	
+
+	Does it contain nuts?
+	<input type="radio" name="search_food_nuts" value=1>Yes 
+	<input type="radio" name="search_food_nuts" value=0 checked>No 
+	<br>	
+
+	Does it contain shellfish?
+	<input type="radio" name="search_food_shellfish" value=1>Yes
+	<input type="radio" name="search_food_shellfish" value=0 checked>No 
+	<br>	
+
+	Does it contain carbs?
+	<input type="radio" name="search_food_carbs" value=1>Yes
+	<input type="radio" name="search_food_carbs" value=0 checked>No
+	<br>	
+
+	Does it contain animal products?
+	<input type="radio" name="search_food_animal" value=1>Yes 
+	<input type="radio" name="search_food_animal" value=0 checked>No 
+	<br>	
+
+	Does it contain gluten?
+	<input type="radio" name="search_food_gluten" value=1>Yes 
+	<input type="radio" name="search_food_gluten" value=0 checked>No 
+	<br>	
+
+	Does it contain soy?
+	<input type="radio" name="search_food_soy" value=1>Yes 
+	<input type="radio" name="search_food_soy" value=0 checked>No 
+	<br>
+
+	<input type="button" value="Search" onclick="search_foods()">	
+</form>
+<br><br>
+
+
+{{#if display_food_search}}
+<h2 align="center">Search results... </h2>
+	<table align="center">
+		<thead>
+			<th>Food</th>
+			<th>Calories per Ounce</th>
+			<th>Meat</th>
+			<th>Dairy</th>
+			<th>Nuts</th>
+			<th>Shellfish</th>
+			<th>Carbs</th>
+			<th>Animal Products</th>
+			<th>Gluten</th>  
+			<th>Soy</th>
+			<th>Add Food to Recipe Builder</th>
+		</thead> 
+
+		<tbody>
+			{{#each food_search}}
+			<tr>
+				<td>{{food_name}}</td>
+				<td>{{calories_ounce}}</td>
+				<td>{{contains_meat}}</td>
+				<td>{{contains_dairy}}</td>
+				<td>{{contains_nuts}}</td>
+				<td>{{contains_shellfish}}</td>
+				<td>{{contains_carbs}}</td>
+				<td>{{contains_animal_products}}</td>
+				<td>{{contains_gluten}}</td>
+				<td>{{contains_soy}}</td>
+				<button>Add to Recipe Builder</button>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+{{else}}
+{{/if}}
+<br><br>
+
+
+
+
+<h3 align="center">Current Recipe Builder</h3>
+
+
+<br><br><br> --}}
+
 </body>
-
-{{!-- <script>
-	function addIngredient() {
-		var x = document.createElement('div');
-		x.innerHTML = "Ingredient: <input type ='text'> <br>";
-		document.getElementById('ingredients').appendChild(x);
-	};
-
-</script> --}}
 
 
