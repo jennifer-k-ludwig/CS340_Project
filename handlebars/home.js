@@ -3,7 +3,7 @@ module.exports = function() {
 	var express = require('express');
     var router = express.Router();
 
-<<<<<<< HEAD
+
 	function getName(res, req, mysql, session, context, complete){
         mysql.pool.query("SELECT first_name FROM users WHERE user_id=?", [req.session.user_id], function(error, results, fields){
             if(error){
@@ -18,8 +18,8 @@ module.exports = function() {
             complete();
 		});
 	}
-=======
->>>>>>> 4b76a9d4497a1092b7fda1e93e02e1816394fa4e
+
+
 
 	// query to get Diets -- we'll need to change the query to only select user diets
 	function getDiet(res, req, mysql, session, context, complete){
@@ -54,11 +54,7 @@ module.exports = function() {
             complete();
         });
 	}
-	
-<<<<<<< HEAD
 
-=======
->>>>>>> 4b76a9d4497a1092b7fda1e93e02e1816394fa4e
 	// helper function to change the 1's and 0's of the diet query to Yes and No.
 	function parseDietResults(results) {
 		results.forEach(element => {
@@ -87,10 +83,7 @@ module.exports = function() {
 			else element.diet_no_soy = "No";
 		});
 	}
-<<<<<<< HEAD
-=======
 
->>>>>>> 4b76a9d4497a1092b7fda1e93e02e1816394fa4e
 	
 	//Home Page get and post requests
 	router.get('/', function(req,res){
