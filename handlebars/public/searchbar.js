@@ -21,12 +21,13 @@ $(document).ready(function(){
 
       });   
 
+    // would like to change the window.location portion of this delete button
     $(".deleteRecipeButton").click(function(){
         $.ajax({
             url: '/search/delete/recipe/' + encodeURI($(this).attr('value')),
             type: 'DELETE',
             success: function(result){
-                window.location.reload(true);
+                window.location = '/search/';
             }
         })
 
