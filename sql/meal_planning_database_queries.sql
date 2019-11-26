@@ -98,10 +98,10 @@ DELETE FROM users WHERE users.user_id=req.session.user_id;
 --
 
 --Search for food
-SELECT * FROM foods WHERE food_name=?;
+SELECT * FROM foods WHERE foods.food_name LIKE " + mysql.pool.escape('%' + user_search_text + '%')
 
 --Search for recipe
-SELECT * FROM recipes WHERE recipe_name=?;
+SELECT * FROM recipes WHERE recipes.recipe_name LIKE " + mysql.pool.escape('%' + user_search_text + '%')
 
 --Adding food to database
 INSERT INTO foods 
@@ -131,4 +131,10 @@ INSERT INTO recipes
 VALUES (?,?,?,?,?,?,?,?,?);
 
 --Deleting recipe from database
-DELETE FROM recipes WHERE recipe_name=?;
+DELETE FROM recipes WHERE recipe_id=?;
+
+--Updating a recipe's properties
+UPDATE recipes SET recipe_no_meat=?, recipe_no_dairy=?, recipe_no_nuts=?, recipe_no_shellfish=?, recipe_no_carbs=?, recipe_no_animal_products=?, recipe_no_gluten=?, recipe_no_soy=?  WHERE recipe_id=?
+
+--Show a recipe's relationship with its associated foods
+SELECT food_name, recipe_name, calories_ounce FROM (recipes INNER JOIN (SELECT * FROM foods_recipes INNER JOIN foods ON foods_recipes.food = foods.food_id) as t1 ON t1.recipe = recipes.recipe_id) where recipe_id = ?
