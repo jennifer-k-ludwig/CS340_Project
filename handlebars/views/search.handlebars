@@ -89,7 +89,7 @@ Using handlebars to hide the displays until the user decides to search
 					<td>{{recipe_no_animal_products}}</td>
 					<td>{{recipe_no_gluten}}</td>
 					<td>{{recipe_no_soy}}</td>
-					<td> <button class = "showIngredientsButton" value="{{recipe_id}}"> Show Ingredients </button></td>
+					<td> <button class = "showIngredientsButton" value="{{recipe_id}}">Show Ingredients</button></td>
 					<td> <button class = "updateIngredientsButton" value="{{recipe_id}}"> Update Ingredients </td>
 					<td> <button class = "updateRecipePropButton" value="{{recipe_id}}"> Update Recipe </button></td>
 					<td> <button class = "addRecipeToUserListButton" value="{{recipe_id}}"> Add </button></td>
@@ -103,42 +103,23 @@ Using handlebars to hide the displays until the user decides to search
 	{{/if}}
 </div>
 
-<div>
-	{{#if display_ingredients}}
-		<h2 align="center"> {{user_recipe}}'s Ingredients </h2>
-		<table align="center" id = "recipe_table">
-			<thead>
-				<th>Food</th>
-				<th>Calories Per Ounce</th>
-			</thead> 
-
-			<tbody>
-				{{#each ingredient}}
-				<tr>
-					<td>{{food_name}}</td>
-					<td>{{calories_ounce}}</td>
-				</tr>
-				{{/each}}
-			</tbody>
-		</table>
-		
-	{{else}}
-	{{/if}}
-
-	{{#if no_display_ingredients}}
-		<h2 align="center"> {{user_recipe}}'s Ingredients </h2>
-		<div align="center">There are no foods associated with this recipe</div>
-	{{else}}
-	{{/if}}
+<div id="displayIngredientsDiv" align="center"> 
+	<button id="awesome2" onclick="hideIngredientTable()"> Hide Table </button>
 </div> 
+<div id="displayIngredientsDiv2"> 
 
-
+</div> 
+<div id="displayUpdateIngredientsDiv"> </div>
 <!-----------------------------  UPDATE RECIPE SECTION -------------------------->
 <br>
 <br>
-<div id="updateProperties"> 
+<div id="updatePropertiesHideButton" align="center">
+	<button onclick="hideUpdateRecipeProp()">Hide Form</button>
+</div>
+
+<div id="updateProperties" align="center"> 
 	<div id="updatePropertiesForm">
-		<form id = "updateRecipeForm" align="center" action = "/recipe_update" method="POST">
+		<form id = "updateRecipeForm" align="center" action = "" method="">
 		Does it contain meat?
 		<select name="update_recipe_meat">
 			<option value=0>Yes</option> 
@@ -201,11 +182,12 @@ Using handlebars to hide the displays until the user decides to search
 
 
 <!-----------------------------  ADD FOOD SECTION -------------------------->
+{{#if display_food}}
 <br>
 <br>
 <hr size="3" noshade>
 <h3 align="center">Don't see a food? Add one!</h3>
-<form align="center" action = "/search/food" method="POST">
+<form id="addFoodForm" align="center" action = "" method="">
 
 	Name: <input type="text" name="add_food_name" required>
 	<br>
@@ -254,15 +236,18 @@ Using handlebars to hide the displays until the user decides to search
 	<input type="radio" name="add_food_soy" value=0>No 
 	<br>
 
-	<input type="submit" value="Add Food!"><br>			
+	<button id = "addFoodButton" value=""> Add Food </button>
+	<!-- <input type="submit" value="Add Food!"><br>-->		
 </form>
-
+{{else}}
+{{/if}}
 <!-----------------------------  ADD RECIPE SECTION -------------------------->
 <br>
 <br>
+{{#if display_recipe}}
 <hr size="3" noshade>
 <h3 align="center">Don't see a recipe? Add one!</h3>
-<form align="center" action = "/search/recipe" method="POST">
+<form id="addRecipeForm" align="center" action = "" method="">
 
 	Name: <input type="text" name="add_recipe_name" required>
 	<br>
@@ -307,109 +292,37 @@ Using handlebars to hide the displays until the user decides to search
 	<input type="radio" name="add_recipe_soy" value=1>No 
 	<br>
 
-	<input type="submit" value="Add Recipe!"><br>			
+	<button id = "addRecipeButton" value=""> Add Recipe </button>
+	<!--	<input type="submit" value="Add Recipe!"><br>	-->		
 </form>
 <br><br>
-
-<!-----------------------------  MISCELLANOUS STUFF RIGHT NOW -------------------------->
-{{!-- <br>
-<br>
-<hr size="3" noshade>
-<h4 align="center">Search for a food in our Database to add to your recipe</h4>
-<form align="center" action="" method="" onsubmit="search_foods(); return false;">
-	<h5>Ingredient Properties:</h5>
-
-	Does it contain meat?
-	<input type="radio" name="search_food_meat" value=1>Yes 
-	<input type="radio" name="search_food_meat" value=0 checked>No
-	<br>
-
-	Does it contain dairy?
-	<input type="radio" name="search_food_dairy" value=1>Yes 
-	<input type="radio" name="search_food_dairy" value=0 checked>No 
-	<br>	
-
-	Does it contain nuts?
-	<input type="radio" name="search_food_nuts" value=1>Yes 
-	<input type="radio" name="search_food_nuts" value=0 checked>No 
-	<br>	
-
-	Does it contain shellfish?
-	<input type="radio" name="search_food_shellfish" value=1>Yes
-	<input type="radio" name="search_food_shellfish" value=0 checked>No 
-	<br>	
-
-	Does it contain carbs?
-	<input type="radio" name="search_food_carbs" value=1>Yes
-	<input type="radio" name="search_food_carbs" value=0 checked>No
-	<br>	
-
-	Does it contain animal products?
-	<input type="radio" name="search_food_animal" value=1>Yes 
-	<input type="radio" name="search_food_animal" value=0 checked>No 
-	<br>	
-
-	Does it contain gluten?
-	<input type="radio" name="search_food_gluten" value=1>Yes 
-	<input type="radio" name="search_food_gluten" value=0 checked>No 
-	<br>	
-
-	Does it contain soy?
-	<input type="radio" name="search_food_soy" value=1>Yes 
-	<input type="radio" name="search_food_soy" value=0 checked>No 
-	<br>
-
-	<input type="button" value="Search" onclick="search_foods()">	
-</form>
-<br><br>
-
-
-{{#if display_food_search}}
-<h2 align="center">Search results... </h2>
-	<table align="center">
+{{else}}
+{{/if}}
+<script id="showIngredientTemplate" type="text/x-handlebars-template">
+	\{{#if display_ingredients}}
+	<h2 align="center"> \{{user_recipe}}'s Ingredients </h2>
+	<table align="center" id = "recipe_table">
 		<thead>
 			<th>Food</th>
-			<th>Calories per Ounce</th>
-			<th>Meat</th>
-			<th>Dairy</th>
-			<th>Nuts</th>
-			<th>Shellfish</th>
-			<th>Carbs</th>
-			<th>Animal Products</th>
-			<th>Gluten</th>  
-			<th>Soy</th>
-			<th>Add Food to Recipe Builder</th>
+			<th>Calories Per Ounce</th>
 		</thead> 
 
 		<tbody>
-			{{#each food_search}}
+			\{{#each ingredient}}
 			<tr>
-				<td>{{food_name}}</td>
-				<td>{{calories_ounce}}</td>
-				<td>{{contains_meat}}</td>
-				<td>{{contains_dairy}}</td>
-				<td>{{contains_nuts}}</td>
-				<td>{{contains_shellfish}}</td>
-				<td>{{contains_carbs}}</td>
-				<td>{{contains_animal_products}}</td>
-				<td>{{contains_gluten}}</td>
-				<td>{{contains_soy}}</td>
-				<button>Add to Recipe Builder</button>
+				<td>\{{food_name}}</td>
+				<td>\{{calories_ounce}}</td>
 			</tr>
-			{{/each}}
+			\{{/each}}
 		</tbody>
 	</table>
-{{else}}
-{{/if}}
-<br><br>
+	
+	\{{else}}
+    	<h2 align="center"> \{{user_recipe}}'s Ingredients </h2>
+		<div align="center">There are no foods associated with this recipe</div>
+	\{{/if}}
 
-
-
-
-<h3 align="center">Current Recipe Builder</h3>
-
-
-<br><br><br> --}}
+</script>
 
 </body>
 
