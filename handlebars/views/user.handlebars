@@ -13,12 +13,12 @@
 		
 <h2 align="center">User Settings</h2>
 <form id="update_info" align="center" action="/user" method="post">
-	<label> First Name: <input name="first_name" type="text"></label><br>
-	<label> Last Name: <input name="last_name" type="text"></label><br>
-	<label> Birth Date: <input name="birth_date" type="date"></label><br>
-	<label> Max Calories per Day: <input name="max_calories" type="number"></label><br>
-	<label> Email Address: <input name="email_address" type="email"></label><br>			
-	<label> Password: <input name="password" type="password"></label><br>
+	<label> First Name: <input name="first_name" type="text" value="{{first_name}}"></label><br>
+	<label> Last Name: <input name="last_name" type="text" value="{{last_name}}"></label><br>
+	<label> Birth Date: <input name="birth_date" type="date" value="{{birth_date}}"></label><br>
+	<label> Max Calories per Day: <input name="max_calories" type="number" value="{{max_calories}}"></label><br>
+	<label> Email Address: <input name="email_address" type="email" value="{{email_address}}"></label><br>			
+	<label> Password: <input name="password" type="password" value="{{password}}"></label><br>
 	
 	Dietary Preferences:<br>
 	<label> No Meat <input name="no_meat" value="1" type="checkbox"></label><br>	

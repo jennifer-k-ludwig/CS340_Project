@@ -12,7 +12,7 @@ app.use(session({secret:'SuperSecretPassword',resave:true,saveUninitialized: tru
 app.use('/static', express.static('public'));
 
 app.set('view engine', 'handlebars');
-app.set('port', 7296);
+app.set('port', 7298);
 app.set('mysql', mysql);
 
 app.use('/login', require('./login.js'));

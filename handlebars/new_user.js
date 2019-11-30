@@ -3,7 +3,11 @@ module.exports = function(){
     var express = require('express');
     var router = express.Router();
 	
-	function getDiet(res, req, mysql, complete){
+	function getDiet(res, req, mysql, session){
+		
+		console.log("Inside getDiet");
+		
+		var getUserNotCalled = true;
 		
         mysql.pool.query("SELECT diet_id FROM diets WHERE diet_no_meat=? AND diet_no_dairy=? AND diet_no_nuts=? AND diet_no_shellfish=? AND diet_no_carbs=? AND diet_no_animal_products=? AND diet_no_gluten=? AND diet_no_soy=?", 
 		[req.body.no_meat,req.body.no_dairy,req.body.no_nuts,req.body.no_shellfish,req.body.no_carbs,req.body.no_animal_products,req.body.no_gluten,req.body.no_soy], function(error, results, fields){
@@ -11,17 +15,27 @@ module.exports = function(){
                 res.write(JSON.stringify(error));
                 res.end();
 			}
-			console.log("Diet Id Results");
-			console.log(results);
-			console.log('\n');
 			
-			req.session.select_diet = results;
-			console.log("Session select_diet");
-			console.log(req.session.select_diet);
-			console.log('\n');			
+			else if (results === undefined || results.length == 0) {
+				insertDiet(res, req, mysql, session);
+				getDiet(res, req, mysql, session);
+			}		
 			
-			complete();
-
+			else {
+				console.log("Diet Id Results");
+				console.log(results);
+				console.log('\n');
+				
+				req.session.diet_id = results[0].diet_id;
+				console.log("Session diet_id");
+				console.log(req.session.diet_id);
+				console.log('\n');
+	
+				if(getUserNotCalled) {
+					getUser(res, req, mysql, session);
+					getUserNotCalled = false;
+				}
+			}
 		});
 	};
 	
@@ -43,28 +57,37 @@ module.exports = function(){
 		if (req.body.no_soy != 1) req.body.no_soy = 0;	
 	};
 	
-	function getUser(res, req, mysql, complete) {
+	function getUser(res, req, mysql, session) {
+		
+		console.log("Inside getUser");
+		
 		mysql.pool.query("SELECT user_id FROM users WHERE email_address=?", 
 		[req.body.email_address], function(error, results, fields){
             if(error){
                 res.write(JSON.stringify(error));
                 res.end();
 			}
-			console.log("User Id Results");
-			console.log(results);
-			console.log('\n');
+			else if (results === undefined || results.length == 0) {
+				insertUser(res, req, mysql, session);
+				getUser(res, req, mysql, session);
+			}		
 			
-			req.session.select_user = results;
-			console.log("Session select_user");
-			console.log(req.session.select_user);
-			console.log('\n');			
-			
-			complete();
-
+			else {
+				console.log("User Id Results");
+				console.log(results);
+				console.log('\n');
+				
+				req.session.user_id = results[0].user_id;
+				console.log("Session user_id");
+				console.log(req.session.user_id);
+				console.log('\n');
+				
+				res.redirect('/home');
+			}			
 		});
 	}	
 	
-	function insertDiet(res, req, mysql, complete) {
+	function insertDiet(res, req, mysql, session) {
 			console.log("Inside insertDiet");
 			mysql.pool.query('INSERT INTO `diets` (`diet_no_meat`,`diet_no_dairy`,`diet_no_nuts`,`diet_no_shellfish`,`diet_no_carbs`,`diet_no_animal_products`,`diet_no_gluten`,`diet_no_soy`) VALUES (?,?,?,?,?,?,?,?)', 
 			[req.body.no_meat,req.body.no_dairy,req.body.no_nuts,req.body.no_shellfish,req.body.no_carbs,req.body.no_animal_products,req.body.no_gluten,req.body.no_soy], function(error, results, fields){
@@ -72,19 +95,17 @@ module.exports = function(){
 					res.write(JSON.stringify(error));
 					res.end();
 				}
-				complete();
 			});
 	}
 	
-	function insertUser(res, req, mysql, complete) {		
+	function insertUser(res, req, mysql, session) {		
 			console.log("Inside insertUser");
 			mysql.pool.query('INSERT INTO `users` (`first_name`,`last_name`,`birth_date`,`email_address`,`password`,`max_calories`,`diet`) VALUES (?,?,?,?,?,?,?)', 
-			[req.body.first_name,req.body.last_name,req.body.birth_date,req.body.email_address,req.body.password,req.body.max_calories,req.session.select_diet[0].diet_id], function(error, results, fields){
+			[req.body.first_name,req.body.last_name,req.body.birth_date,req.body.email_address,req.body.password,req.body.max_calories,req.session.diet_id], function(error, results, fields){
 				if(error){
 					res.write(JSON.stringify(error));
 					res.end();
 				}	
-				complete();
 			});
 	}
 		
@@ -96,7 +117,6 @@ module.exports = function(){
 
 	router.post('/', function(req,res,next){
 		
-		var callbackCount = 0;
 		var mysql = req.app.get('mysql');
 		var session = req.app.get('session');
 
@@ -104,26 +124,7 @@ module.exports = function(){
 		console.log("Request Body:");
 		console.log(req.body);
 		
-		getDiet(res, req, mysql, complete);
-		getUser(res, req, mysql, complete);
-		
-		function complete(){
-			callbackCount++;
-		}
-	
-		if(callbackCount >= 2){
-			if(req.session.select_diet === undefined || req.session.select_diet.length == 0) {
-				insertDiet(res, req, mysql, complete);
-				getDiet(res, req, mysql, complete);
-			}
-			req.session.diet_id = req.session.select_diet[0].diet_id;
-			if(req.session.select_user === undefined || req.session.select_user.length == 0) {
-				insertUser(res, req, mysql, complete);
-				getUser(res, req, mysql, complete);
-			}			
-			req.session.user_id = req.session.select_user[0].user_id;
-			res.redirect('/home');
-		}
+		getDiet(res, req, mysql, session);			
 	});
 	
 	return router;
