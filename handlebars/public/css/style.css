@@ -2,12 +2,37 @@
     width: 50em;
 }
 
+#displayIngredientsDiv {
+    display:none;
+}
+
 #updatePropertiesForm{
-  display:none;
+  font-weight: normal;
+}
+
+#updateProperties{
+    display: none;
+}
+
+#updatePropertiesHideButton{
+    display:none;
+}
+
+#updateFormToggleButton{
+    display:none;
 }
 
 .search_url_path {
     display: none;
+}
+
+table {
+	margin-left:auto; 
+    margin-right:auto;
+}
+
+h2 {
+text-align:center;
 }
 
 th {
@@ -17,4 +42,5 @@ th {
   
 td {
     text-align: center;
+    font-weight: normal;
 }
