@@ -1,0 +1,70 @@
+<h1 align = "center">
+    <div>The {{user_recipe}} Recipe</div>
+</h1>
+<br>
+<br>
+    <table align="center" id = "recipe_table">
+        <thead>
+            <th>Meat</th>
+            <th>Dairy</th>
+            <th>Nuts</th>
+            <th>Shellfish</th>
+            <th>Carbs</th>
+            <th>Animal Products</th>
+            <th>Gluten</th>  
+            <th>Soy</th>
+        </thead> 
+
+        <tbody>
+            {{#each recipe}}
+            <tr>
+                <td>{{recipe_no_meat}}</td>
+                <td>{{recipe_no_dairy}}</td>
+                <td>{{recipe_no_nuts}}</td>
+                <td>{{recipe_no_shellfish}}</td>
+                <td>{{recipe_no_carbs}}</td>
+                <td>{{recipe_no_animal_products}}</td>
+                <td>{{recipe_no_gluten}}</td>
+                <td>{{recipe_no_soy}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+<br>
+<br>
+<div>
+    {{#if display_ingredients}}
+	<h2 align="center"> {{user_recipe}}'s Ingredients </h2>
+	<table align="center" id = "recipe_table">
+		<thead>
+			<th>Food</th>
+			<th>Calories Per Ounce</th>
+		</thead> 
+
+		<tbody>
+			{{#each ingredient}}
+			<tr>
+				<td>{{food_name}}</td>
+				<td>{{calories_ounce}}</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+	
+	{{else}}
+    	<h2 align="center"> {{user_recipe}}'s Ingredients </h2>
+		<div align="center">There are no foods associated with this recipe</div>
+	{{/if}}
+</div>
+<br>
+<br>
+<h3 align="center">Search for a food to add to the recipe</h3>
+<form align="center" action="" method="" onsubmit="search_foods_or_recipes(); return false;">
+	<label> Type: <select id="food_or_recipe">
+		<option value="food">Food</option>
+	</label>
+	<label> Name: <input id ="user_input_search" type="search" placeholder="Leave blank to search all of a specific type"></label>	
+	<button id="foodsForRecipeButton" value={{id}}>Find Foods</button>
+</form>
+
+
