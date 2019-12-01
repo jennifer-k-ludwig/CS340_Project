@@ -2,8 +2,7 @@
 module.exports = function(){
     var express = require('express');
     var router = express.Router();
-	
-	
+		
 	function deleteUser (res,req,mysql) {
 			mysql.pool.query('DELETE FROM users WHERE user_id=?', 
 			[req.session.user_id], function(error, results, fields){
@@ -65,6 +64,7 @@ module.exports = function(){
 				if(updateUserNotCalled) {
 					updateUser(res, req, mysql, session, current);
 					updateUserNotCalled = false;
+					res.redirect('/home');
 				}
 			}
 		});
@@ -92,7 +92,7 @@ module.exports = function(){
 				});
 	}
 	
-	function getCurrentUser(res, req, mysql, session, complete, context, current) {
+	function currentUserGET(res, req, mysql, session, complete, context, current) {
 		mysql.pool.query('SELECT * FROM users INNER JOIN diets on diet=diet_id WHERE user_id=?', 
 		[req.session.user_id], function(error, results, fields){
 			if(error){
@@ -103,7 +103,23 @@ module.exports = function(){
 			current = results[0];
 			console.log("Current:");
 			console.log(current);
-			complete(res,req,mysql,session, current);
+			complete(res,req,context,current);
+		});
+	}
+	
+	function currentUserPOST(res, req, mysql, session, current) {
+		mysql.pool.query('SELECT * FROM users INNER JOIN diets on diet=diet_id WHERE user_id=?', 
+		[req.session.user_id], function(error, results, fields){
+			if(error){
+				res.write(JSON.stringify(error));
+				res.end();
+			}
+			
+			current = results[0];
+			console.log("Current:");
+			console.log(current);
+			
+			updateDiet(res, req, mysql, session, current);
 		});
 	}
 	
@@ -112,12 +128,12 @@ module.exports = function(){
 		var callbackCount = 0;		
 		var mysql = req.app.get('mysql');
 		var session = req.app.get('session');
-		var context = {};
-		
+		var context = {};	
 		var current;
-		getCurrentUser(res, req, mysql, session, complete, context, current);
 		
-		function complete(res,req,mysql,session, current){
+		currentUserGET(res, req, mysql, session, complete, context, current);
+		
+		function complete(res,req,context,current){
 			callbackCount++;
 			if(callbackCount >= 1){
 				context.first_name = current.first_name;
@@ -134,28 +150,18 @@ module.exports = function(){
 
 	router.post('/', function(req,res){
 		
-		var callbackCount = 0;
 		var mysql = req.app.get('mysql');
 		var session = req.app.get('session');
-		var context = {};
-		
 		var current;
-		getCurrentUser(res, req, mysql, session, complete, context, current);
-	
-		function complete(res,req,mysql,session, current){
-			callbackCount++;
-			if(callbackCount >= 1){
-				if (req.body.update) {
-					convertDiet(req);
-					updateDiet(res, req, mysql, session, current);
-				}
-					
-				if (req.body.delete) {
-					deleteUser(res,req,mysql);
-				}
-			}
+			
+		if (req.body.update) {
+			convertDiet(req);
+			currentUserPOST(res, req, mysql, session, current);
 		}
-	
+		
+		if (req.body.delete) {
+			deleteUser(res,req,mysql);
+		}	
 	});
 	
 	return router;
