@@ -12,14 +12,14 @@ DROP TABLE IF EXISTS diets;
 
 CREATE TABLE `diets` (
 	`diet_id` INT(11) NOT NULL AUTO_INCREMENT,
-	`diet_no_meat` BOOLEAN DEFAULT FALSE,
-	`diet_no_dairy` BOOLEAN DEFAULT FALSE,
-	`diet_no_nuts` BOOLEAN DEFAULT FALSE,
-	`diet_no_shellfish` BOOLEAN DEFAULT FALSE,
-	`diet_no_carbs` BOOLEAN DEFAULT FALSE,
-	`diet_no_animal_products` BOOLEAN DEFAULT FALSE,
-	`diet_no_gluten` BOOLEAN DEFAULT FALSE,
-	`diet_no_soy` BOOLEAN DEFAULT FALSE,	
+	`diet_no_meat` BOOLEAN NOT NULL DEFAULT 0,
+	`diet_no_dairy` BOOLEAN NOT NULL DEFAULT 0,
+	`diet_no_nuts` BOOLEAN NOT NULL DEFAULT 0,
+	`diet_no_shellfish` BOOLEAN NOT NULL DEFAULT 0,
+	`diet_no_carbs` BOOLEAN NOT NULL DEFAULT 0,
+	`diet_no_animal_products` BOOLEAN NOT NULL DEFAULT 0,
+	`diet_no_gluten` BOOLEAN NOT NULL DEFAULT 0,
+	`diet_no_soy` BOOLEAN NOT NULL DEFAULT 0,	
 	PRIMARY KEY (`diet_id`)
 );
 
@@ -87,14 +87,14 @@ UNLOCK TABLES;
 CREATE TABLE `recipes` (
 	`recipe_id` INT(11) NOT NULL AUTO_INCREMENT,
 	`recipe_name` VARCHAR(255) NOT NULL,
-	`recipe_no_meat` BOOLEAN DEFAULT FALSE,
-	`recipe_no_dairy` BOOLEAN DEFAULT FALSE,
-	`recipe_no_nuts` BOOLEAN DEFAULT FALSE,
-	`recipe_no_shellfish` BOOLEAN DEFAULT FALSE,
-	`recipe_no_carbs` BOOLEAN DEFAULT FALSE,
-	`recipe_no_animal_products` BOOLEAN DEFAULT FALSE,
-	`recipe_no_gluten` BOOLEAN DEFAULT FALSE,
-	`recipe_no_soy` BOOLEAN DEFAULT FALSE,	
+	`recipe_no_meat` BOOLEAN NOT NULL DEFAULT 0,
+	`recipe_no_dairy` BOOLEAN NOT NULL DEFAULT 0,
+	`recipe_no_nuts` BOOLEAN NOT NULL DEFAULT 0,
+	`recipe_no_shellfish` BOOLEAN NOT NULL DEFAULT 0,
+	`recipe_no_carbs` BOOLEAN NOT NULL DEFAULT 0,
+	`recipe_no_animal_products` BOOLEAN NOT NULL DEFAULT 0,
+	`recipe_no_gluten` BOOLEAN NOT NULL DEFAULT 0,
+	`recipe_no_soy` BOOLEAN NOT NULL DEFAULT 0,	
 	PRIMARY KEY (`recipe_id`)
 );
 
@@ -131,14 +131,14 @@ CREATE TABLE `foods` (
 	`food_id` INT(11) NOT NULL AUTO_INCREMENT,
 	`food_name` VARCHAR(255) NOT NULL,
 	`calories_ounce` INT(11),
-	`contains_meat` BOOLEAN DEFAULT FALSE,
-	`contains_dairy` BOOLEAN DEFAULT FALSE,
-	`contains_nuts` BOOLEAN DEFAULT FALSE,
-	`contains_shellfish` BOOLEAN DEFAULT FALSE,
-	`contains_carbs` BOOLEAN DEFAULT FALSE,
-	`contains_animal_products` BOOLEAN DEFAULT FALSE,
-	`contains_gluten` BOOLEAN DEFAULT FALSE,
-	`contains_soy` BOOLEAN DEFAULT FALSE,	
+	`contains_meat` BOOLEAN NOT NULL DEFAULT 0,
+	`contains_dairy` BOOLEAN NOT NULL DEFAULT 0,
+	`contains_nuts` BOOLEAN NOT NULL DEFAULT 0,
+	`contains_shellfish` BOOLEAN NOT NULL DEFAULT 0,
+	`contains_carbs` BOOLEAN NOT NULL DEFAULT 0,
+	`contains_animal_products` BOOLEAN NOT NULL DEFAULT 0,
+	`contains_gluten` BOOLEAN NOT NULL DEFAULT 0,
+	`contains_soy` BOOLEAN NOT NULL DEFAULT 0,	
 	PRIMARY KEY (`food_id`)
 );
 
@@ -176,8 +176,12 @@ UNLOCK TABLES;
 CREATE TABLE `users_recipes` (
 	`user` INT(11),
 	`recipe` INT(11),
-	FOREIGN KEY (`user`) REFERENCES users(`user_id`),
-	FOREIGN KEY (`recipe`) REFERENCES recipes(`recipe_id`)
+	FOREIGN KEY (`user`) 
+	REFERENCES users(`user_id`)
+	ON DELETE CASCADE,
+	FOREIGN KEY (`recipe`) 
+	REFERENCES recipes(`recipe_id`)
+	ON DELETE SET NULL
 );
 
 --
@@ -199,8 +203,11 @@ UNLOCK TABLES;
 CREATE TABLE `recipes_diets` (
 	`recipe` INT(11),
 	`diet` INT(11),
-	FOREIGN KEY (`recipe`) REFERENCES recipes(`recipe_id`),
-	FOREIGN KEY (`diet`) REFERENCES diets(`diet_id`)
+	FOREIGN KEY (`recipe`) 
+	REFERENCES recipes(`recipe_id`)
+	ON DELETE SET NULL,
+	FOREIGN KEY (`diet`) 
+	REFERENCES diets(`diet_id`)
 );
 
 --
@@ -221,8 +228,12 @@ UNLOCK TABLES;
 CREATE TABLE `foods_recipes` (
 	`food` INT(11),
 	`recipe` INT(11),
-	FOREIGN KEY (`food`) REFERENCES foods(`food_id`),
-	FOREIGN KEY (`recipe`) REFERENCES recipes(`recipe_id`)
+	FOREIGN KEY (`food`) 
+	REFERENCES foods(`food_id`)
+	ON DELETE SET NULL,
+	FOREIGN KEY (`recipe`) 
+	REFERENCES recipes(`recipe_id`)
+	ON DELETE SET NULL
 );
 
 --

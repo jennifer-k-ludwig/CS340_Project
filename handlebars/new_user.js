@@ -3,6 +3,7 @@ module.exports = function(){
     var express = require('express');
     var router = express.Router();
 	
+	//getDiet - Selects diet from database based on form data. If diet does not exist, adds it to database. Updates session diet id.
 	function getDiet(res, req, mysql, session){
 		
 		console.log("Inside getDiet");
@@ -39,6 +40,7 @@ module.exports = function(){
 		});
 	};
 	
+	//convertDiet - Converts form data values to 1 or 0. 1 if value="1" or 0 if value is undefined.
 	function convertDiet (req) {
 		if (req.body.no_meat != 1) req.body.no_meat = 0;
 
@@ -57,9 +59,11 @@ module.exports = function(){
 		if (req.body.no_soy != 1) req.body.no_soy = 0;	
 	};
 	
+	//getUser - Selects user id from database based on the inputted email address and password. If user does not exists, adds them to the database. Sets session user id.
+	//NEED TO HANDLE CASES WHERE USER ALREADY EXISTS
 	function getUser(res, req, mysql, session) {
 		
-		console.log("Inside getUser");
+		//console.log("Inside getUser");
 		
 		mysql.pool.query("SELECT user_id FROM users WHERE email_address=?", 
 		[req.body.email_address], function(error, results, fields){
@@ -73,22 +77,23 @@ module.exports = function(){
 			}		
 			
 			else {
-				console.log("User Id Results");
-				console.log(results);
-				console.log('\n');
+				//console.log("User Id Results");
+				//console.log(results);
+				//console.log('\n');
 				
 				req.session.user_id = results[0].user_id;
-				console.log("Session user_id");
-				console.log(req.session.user_id);
-				console.log('\n');
+				//console.log("Session user_id");
+				//console.log(req.session.user_id);
+				//console.log('\n');
 				
 				res.redirect('/home');
 			}			
 		});
 	}	
 	
+	//insertDiet - Inserts diet into dieats table based on form data.
 	function insertDiet(res, req, mysql, session) {
-			console.log("Inside insertDiet");
+			//console.log("Inside insertDiet");
 			mysql.pool.query('INSERT INTO `diets` (`diet_no_meat`,`diet_no_dairy`,`diet_no_nuts`,`diet_no_shellfish`,`diet_no_carbs`,`diet_no_animal_products`,`diet_no_gluten`,`diet_no_soy`) VALUES (?,?,?,?,?,?,?,?)', 
 			[req.body.no_meat,req.body.no_dairy,req.body.no_nuts,req.body.no_shellfish,req.body.no_carbs,req.body.no_animal_products,req.body.no_gluten,req.body.no_soy], function(error, results, fields){
 				if(error){
@@ -98,6 +103,7 @@ module.exports = function(){
 			});
 	}
 	
+	//insertUser - Inserts user info based on form data and the session diet id.
 	function insertUser(res, req, mysql, session) {		
 			console.log("Inside insertUser");
 			mysql.pool.query('INSERT INTO `users` (`first_name`,`last_name`,`birth_date`,`email_address`,`password`,`max_calories`,`diet`) VALUES (?,?,?,?,?,?,?)', 

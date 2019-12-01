@@ -4,7 +4,7 @@ module.exports = function() {
     var router = express.Router();
 
 	// Searches the user's input
-	function searchInput(req, res, mysql, context, complete){
+	function searchInput(req, res, mysql, session, context, complete){
 		// get the user's selection
 		var user_search_type = req.params.type;
 		if(!req.params.food_or_recipe_name) 
@@ -17,8 +17,9 @@ module.exports = function() {
 		// query string will be in the form of "food" + "(user input)" OR "recipe" + "(user input)".
 		if (user_search_type === "food")
 		{
-			var query = "SELECT * FROM foods WHERE foods.food_name LIKE " + mysql.pool.escape('%' + user_search_text + '%');
-			mysql.pool.query(query, function(error, results, fields){
+			var query = "SELECT * FROM foods INNER JOIN diets ON contains_meat<>diet_no_meat AND contains_dairy<>diet_no_dairy AND contains_nuts<>diet_no_nuts AND contains_shellfish<>diet_no_shellfish AND contains_carbs<>diet_no_carbs AND contains_animal_products<>diet_no_animal_products AND contains_gluten<>diet_no_gluten AND contains_soy<>diet_no_soy WHERE diet_id=? AND food_name LIKE" + mysql.pool.escape('%' + user_search_text + '%');
+			var inserts = [req.session.diet_id];
+			mysql.pool.query(query, inserts, function(error, results, fields){
 				if(error){
 					res.write(JSON.stringify(error));
 					res.end();
@@ -44,8 +45,9 @@ module.exports = function() {
 		}
 		else if (user_search_type === "recipe")
 		{
-			var query = "SELECT * FROM recipes WHERE recipes.recipe_name LIKE " + mysql.pool.escape('%' + user_search_text + '%');
-			mysql.pool.query(query, function(error, results, fields){
+			var query = "SELECT * FROM recipes INNER JOIN diets ON recipe_no_meat=diet_no_meat AND recipe_no_dairy=diet_no_dairy AND recipe_no_nuts=diet_no_nuts AND recipe_no_shellfish=diet_no_shellfish AND recipe_no_carbs=diet_no_carbs AND recipe_no_animal_products=diet_no_animal_products AND recipe_no_gluten=diet_no_gluten AND recipe_no_soy=diet_no_soy WHERE diet_id=? AND recipe_name LIKE " + mysql.pool.escape('%' + user_search_text + '%');
+			var inserts = [req.session.diet_id];
+			mysql.pool.query(query, inserts, function(error, results, fields){
 				if(error){
 					res.write(JSON.stringify(error));
 					res.end();
@@ -307,7 +309,8 @@ module.exports = function() {
 		var context = {};
 		context.jsscripts = ["searchbar.js"];
 		var mysql = req.app.get('mysql');
-		searchInput (req, res, mysql, context, complete);
+		var session = req.app.get('session');
+		searchInput (req, res, mysql, session, context, complete);
 		function complete(){
 			callbackCount++;
 			if(callbackCount >= 1){
@@ -431,6 +434,25 @@ module.exports = function() {
 
 	});
 
+	// add recipe to user's recipes
+	router.post('/recipe/:recipe_id', function(req,res){
+		var mysql = req.app.get('mysql');
+		var session = req.app.get('session');
+
+		var sql = "INSERT INTO users_recipes (user, recipe) VALUES (?,?)";
+		var inserts = [req.session.user_id, req.params.recipe_id];
+        sql = mysql.pool.query(sql,inserts,function(error, results, fields){
+            if(error){
+                console.log(error);
+                res.write(JSON.stringify(error));
+                res.end();
+            }else{
+                res.status(200);
+                res.end();
+            }
+        });
+	});
+	
     router.delete('/delete/:type/:id/:id2?', function(req, res){
         var mysql = req.app.get('mysql');
 		

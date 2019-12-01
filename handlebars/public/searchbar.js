@@ -149,7 +149,7 @@ $(document).ready(function(){
         {
             parent_node.removeChild(parent_node.childNodes[0]);
         }
-        
+        s
         
         title.appendChild(title_text);
         parent_node.appendChild(title);
@@ -208,7 +208,19 @@ $(document).ready(function(){
         
     });
 
-
+     // ADD RECIPE TO USER's RECIPES w/ JQUERY AJAX
+     $(".addRecipeToUserListButton").click(function(){
+        $.ajax({
+        
+            url:'/search/recipe/' + $(this).attr('value'),
+            type:'POST',
+            success: function(result){
+                window.location.reload(true);
+            }
+        })
+        
+    });
+	
     $(".updateIngredientsButton").click(function(){
         var id = $(this).attr('value');
         window.location = "/search/updateIngredients/" + encodeURI(id);

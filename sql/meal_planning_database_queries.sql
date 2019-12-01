@@ -34,6 +34,40 @@ FROM recipes
 INNER JOIN users_recipes ON recipes.recipe_id = users_recipes.recipe 
 INNER JOIN users ON users_recipes.user = users.user_id WHERE user_id=?;
 
+--Match recipe with user diet
+SELECT
+	*
+FROM
+	recipes
+INNER JOIN diets
+ON recipe_no_meat=diet_no_meat 
+AND recipe_no_dairy=diet_no_dairy
+AND recipe_no_nuts=diet_no_nuts
+AND recipe_no_shellfish=diet_no_shellfish
+AND recipe_no_carbs=diet_no_carbs
+AND recipe_no_animal_products=diet_no_animal_products
+AND recipe_no_gluten=diet_no_gluten
+AND recipe_no_soy=diet_no_soy
+WHERE diet_id=?
+AND recipe_name LIKE;
+
+--Match food with user diet
+SELECT
+	*
+FROM
+	foods
+INNER JOIN diets
+ON contains_meat<>diet_no_meat 
+AND contains_dairy<>diet_no_dairy
+AND contains_nuts<>diet_no_nuts
+AND contains_shellfish<>diet_no_shellfish
+AND contains_carbs<>diet_no_carbs
+AND contains_animal_products<>diet_no_animal_products
+AND contains_gluten<>diet_no_gluten
+AND contains_soy<>diet_no_soy
+WHERE diet_id=?
+AND food_name LIKE;
+
 --
 --New User page
 --

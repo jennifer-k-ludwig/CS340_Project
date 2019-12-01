@@ -2,7 +2,8 @@
 module.exports = function(){
     var express = require('express');
     var router = express.Router();
-		
+	
+	//deleteUser - Deletes user from database, destroys the session, and redirects to login page.
 	function deleteUser (res,req,mysql) {
 			mysql.pool.query('DELETE FROM users WHERE user_id=?', 
 			[req.session.user_id], function(error, results, fields){
@@ -15,6 +16,7 @@ module.exports = function(){
 			});
 	}
 	
+	//convertDiet - Converts form data values to 1 or 0. 1 if value="1" or 0 if value is undefined.
 	function convertDiet (req) {
 		if (req.body.no_meat != 1) req.body.no_meat = 0;
 
@@ -32,10 +34,11 @@ module.exports = function(){
 		
 		if (req.body.no_soy != 1) req.body.no_soy = 0;	
 	};
-		
+	
+	//updateDiet - Selects existing diet based on form data. If diet does not exist, creates new diet, otherwise sets session id and updates user info.
 	function updateDiet(res, req, mysql, session, current) {
 		
-		console.log("Inside updateDiet");
+		//console.log("Inside updateDiet");
 		
 		var updateUserNotCalled = true;
 		
@@ -70,6 +73,7 @@ module.exports = function(){
 		});
 	}
 	
+	//insertDiet - Inserts diet into diets table based on form data.
 	function insertDiet(res, req, mysql, session) {
 			console.log("Inside insertDiet");
 			mysql.pool.query('INSERT INTO `diets` (`diet_no_meat`,`diet_no_dairy`,`diet_no_nuts`,`diet_no_shellfish`,`diet_no_carbs`,`diet_no_animal_products`,`diet_no_gluten`,`diet_no_soy`) VALUES (?,?,?,?,?,?,?,?)', 
@@ -81,6 +85,7 @@ module.exports = function(){
 			});
 	}
 	
+	//updateUser - Updates user info in users table based on form data.
 	function updateUser(res, req, mysql, session, current) {	
 
 			mysql.pool.query('UPDATE users SET first_name=?,last_name=?,birth_date=?,email_address=?,password=?,max_calories=?,diet=? WHERE users.user_id=?', 
@@ -92,6 +97,7 @@ module.exports = function(){
 				});
 	}
 	
+	//currentUserGET - Gets the current user info.
 	function currentUserGET(res, req, mysql, session, complete, context, current) {
 		mysql.pool.query('SELECT * FROM users INNER JOIN diets on diet=diet_id WHERE user_id=?', 
 		[req.session.user_id], function(error, results, fields){
@@ -107,6 +113,7 @@ module.exports = function(){
 		});
 	}
 	
+	//currentUserGET - Gets the current user info and updates it with new info.
 	function currentUserPOST(res, req, mysql, session, current) {
 		mysql.pool.query('SELECT * FROM users INNER JOIN diets on diet=diet_id WHERE user_id=?', 
 		[req.session.user_id], function(error, results, fields){
