@@ -11,6 +11,44 @@ function search_foods_or_recipes() {
     window.location = '/search/' + encodeURI(food_or_recipe) + '/' + encodeURI(user_search_input);   
 }
 
+/*
+Search function for the updates page
+ */
+function foodsForRecipeButton() {
+    var user_search_input = document.getElementById("user_food_search").value;
+    var id = document.getElementById("update_recipe_id").value;
+    $.ajax({
+        url: '/search/updateIngredients/food/' + id + '/' + user_search_input,
+        type:'GET',
+        success:function(result){
+            console.log("AJAX result\n", result);
+            var showFoodSource = $("#show_food_search_results").html();
+
+            var template = Handlebars.compile(showFoodSource);
+
+            $("#food_search_results").html(template(result));
+
+            // bind click function to add food button on update ingredients page
+            $(".addFoodToRecipeButton").click(function(){
+                var food_id = $(this).attr('value');
+                var recipe_id = document.getElementById("update_recipe_id").value;
+        
+                $.ajax({
+                    url: '/search/updateIngredients/' + food_id + '/' + recipe_id,
+                    type: 'post',
+                    success: function(result){
+                        console.log(result);
+                        window.location.reload(true);
+                    }
+                })
+            });
+        }
+    });
+
+ 
+}
+
+
 // UI function for a button to hide the display table when the user wants to see the ingredients of a recipe
 function hideIngredientTable() {
     document.getElementById("displayIngredientsDiv2").style.display = "none";
@@ -219,10 +257,19 @@ $(document).ready(function(){
         })
         */
     });
-    
 
-    $("#foodsForRecipeButton").click(function(){
+    $(".removeFoodFromRecipeButton").click(function(){
+        var food_id = $(this).attr('value');
+        var recipe_id = document.getElementById("update_recipe_id").value;
 
+        $.ajax({
+
+            url: '/search/delete/ingredients/' + food_id + '/' + recipe_id,
+            type: 'DELETE',
+            success: function(result){
+                window.location.reload(true);
+            }
+        })
     });
 
 });
