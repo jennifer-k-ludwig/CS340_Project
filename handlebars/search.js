@@ -23,22 +23,23 @@ module.exports = function() {
 					res.write(JSON.stringify(error));
 					res.end();
 				}
-				// console.log("Search Food Results");
-				// console.log(results);
-				// console.log('\n');
+				else {
+					// console.log("Search Food Results");
+					// console.log(results);
+					// console.log('\n');
 
-				parseFoodResults(results);
+					parseFoodResults(results);
 
-				// set display_food to true so that search.handlebars displays
-				// the food table
-				context.display_food = true;
+					// set display_food to true so that search.handlebars displays
+					// the food table
+					context.display_food = true;
 
-				context.user_search_type = user_search_type;
-				context.user_search_text = user_search_text;
+					context.user_search_type = user_search_type;
+					context.user_search_text = user_search_text;
 
-				context.food = results;
-				complete();
-	
+					context.food = results;
+					complete();
+				}
 			});
 		}
 		else if (user_search_type === "recipe")
@@ -49,22 +50,24 @@ module.exports = function() {
 					res.write(JSON.stringify(error));
 					res.end();
 				}
-				// console.log("Search Recipe Results");
-				// console.log(results);
-				// console.log('\n');
+				else 
+				{
+					// console.log("Search Recipe Results");
+					// console.log(results);
+					// console.log('\n');
 
-				parseRecipeResults(results);
+					parseRecipeResults(results);
 
-				// set display_recipe to true so that search.handlebars displays
-				// the recipe table
-				context.display_recipe = true;
+					// set display_recipe to true so that search.handlebars displays
+					// the recipe table
+					context.display_recipe = true;
 
-				context.user_search_type = user_search_type;
-				context.user_search_text = user_search_text;
+					context.user_search_type = user_search_type;
+					context.user_search_text = user_search_text;
 
-				context.recipe = results;
-				complete();
-	
+					context.recipe = results;
+					complete();
+				}
 			});
 		}
 
@@ -75,44 +78,43 @@ module.exports = function() {
 
 		// SHOW INGREDIENTS FUNCTIONALITY		
 		var recipeID = req.params.id;
-		var query = "SELECT food_name, recipe_name, calories_ounce FROM (recipes INNER JOIN (SELECT * FROM foods_recipes INNER JOIN foods ON foods_recipes.food = foods.food_id) as t1 ON t1.recipe = recipes.recipe_id) where recipe_id = ?";
+		var query = "SELECT food_name, recipe_name, calories_ounce, food_id, contains_meat, contains_dairy, contains_nuts, contains_shellfish, contains_carbs, contains_animal_products, contains_gluten, contains_soy FROM (recipes INNER JOIN (SELECT * FROM foods_recipes INNER JOIN foods ON foods_recipes.food = foods.food_id) as t1 ON t1.recipe = recipes.recipe_id) where recipe_id = ?";
 		mysql.pool.query(query, recipeID, function(error, results, fields){
 			if(error){
 				res.write(JSON.stringify(error));
 				res.end();
 			}
+			else 
+			{
+				parseFoodResults(results);
 
-			console.log("Show Ingredient of a specific Recipe Results");
-			console.log(results);
-			console.log('\n');
-
-			// set display_ingredients to true so that search.handlebars displays
-			// the recipe table
-			if (Array.isArray(results) && results.length > 0) {
-				context.display_ingredients = true;
-				context.user_recipe = results[0].recipe_name;
-				context.ingredient = results;
-				complete();
-			}
-			else {
-
-				// context.no_display_ingredients = true;
-				mysql.pool.query("SELECT recipe_name FROM recipes where recipe_id = ?", recipeID, function(error, results, fields){
-					if(error){
-						res.write(JSON.stringify(error));
-						res.end();
-					}
-
-					console.log("Recipe Name");
-					console.log(results);
-					console.log('\n');
-
+				// set display_ingredients to true so that search.handlebars displays
+				// the recipe table
+				if (Array.isArray(results) && results.length > 0) {
+					context.display_ingredients = true;
 					context.user_recipe = results[0].recipe_name;
-					
+					context.ingredient = results;
 					complete();
-				});
+				}
+
+				else 
+				{
+
+					// context.no_display_ingredients = true;
+					mysql.pool.query("SELECT recipe_name FROM recipes where recipe_id = ?", recipeID, function(error, results, fields){
+						if(error){
+							res.write(JSON.stringify(error));
+							res.end();
+						}
+						else 
+						{
+							context.user_recipe = results[0].recipe_name;
+							
+							complete();
+						}
+					});
+				}
 			}
-		
 		});
 		
 	}
@@ -133,8 +135,45 @@ module.exports = function() {
 		
 		context.id = req.params.id;
 		complete();
-		
-		
+	}
+
+
+	function updateIngredientsSearch(req, res, mysql, context){
+		context.id = req.params.id;
+
+		var search_text;
+		if(!req.params.user_search_text) 
+		{
+			search_text = '';
+		} 
+		else search_text = req.params.user_search_text;
+
+
+		var query = "SELECT * from (SELECT * from foods WHERE food_id NOT IN (SELECT food from foods_recipes WHERE recipe = ?)) as t1 WHERE food_name LIKE " + mysql.pool.escape('%' + search_text + '%');
+		var recipeID = req.params.id;
+		console.log("SQL\n",query);
+		console.log("recipeID\n",recipeID)
+		mysql.pool.query(query, recipeID, function(error, results, fields){
+			if(error){
+				res.write(JSON.stringify(error));
+				res.end();
+			}
+			else {
+
+				parseFoodResults(results);
+
+				// set display_food to true so that search.handlebars displays the food table
+				context.display_food = true;
+
+				context.user_search = search_text;
+
+				context.food = results;
+				console.log("Context Result\n",context);
+
+				res.send(context);
+			}
+			
+		});
 	}
 
 	// changes the 1s and 0s of the Food Query to Yes/No
@@ -228,7 +267,18 @@ module.exports = function() {
 		
 	});
 
-	// Find foods that match recipe's properties
+	// Route Handler -- Search for food in UpdateIngredients page
+	router.get('/updateIngredients/food/:id/:user_search_text?', function(req,res){
+		var callbackCount = 0;
+		var context = {};
+		context.jsscripts = ["searchbar.js"];
+		var mysql = req.app.get('mysql');
+		updateIngredientsSearch(req,res,mysql,context);
+	
+
+	});
+
+	// Go to the update ingredients page for the user to update a recipe
 	router.get('/updateIngredients/:id', function(req,res){
 		var callbackCount = 0;
 		var context = {};
@@ -248,6 +298,7 @@ module.exports = function() {
 		
 		
 	});
+
 
 
 	// render search page after searching
@@ -360,16 +411,45 @@ module.exports = function() {
         });
     });	
 
+	// add a food to our recipe
+	router.post('/updateIngredients/:food_id/:recipe_id', function(req,res){
+		var mysql = req.app.get('mysql');
 
-    router.delete('/delete/:type/:id', function(req, res){
+		var sql = "INSERT INTO foods_recipes (food, recipe) VALUES (?,?)";
+		var inserts = [req.params.food_id, req.params.recipe_id];
+        sql = mysql.pool.query(sql,inserts,function(error, results, fields){
+            if(error){
+                console.log(error);
+                res.write(JSON.stringify(error));
+                res.end();
+            }else{
+                res.status(200);
+                res.end();
+            }
+        });
+
+
+	});
+
+    router.delete('/delete/:type/:id/:id2?', function(req, res){
         var mysql = req.app.get('mysql');
 		
-		if(req.params.type === "recipe")
-			var sql = "DELETE FROM recipes WHERE recipe_id = ?";
-		else if (req.params.type === "food")
-			var sql = "DELETE FROM foods WHERE food_id = ?";
+		var inserts;
+		var sql;
+		if(req.params.type === "recipe") {
+			sql = "DELETE FROM recipes WHERE recipe_id = ?";
+			inserts = [req.params.id];
+		}
+		else if (req.params.type === "food") {
+			sql = "DELETE FROM foods WHERE food_id = ?";
+			inserts = [req.params.id];
+		}
+		else if (req.params.type === "ingredients") {
+			sql = "DELETE FROM foods_recipes WHERE food = ? AND recipe = ?";
+			inserts = [req.params.id, req.params.id2];
+		}
 
-        var inserts = [req.params.id];
+        
         sql = mysql.pool.query(sql, inserts, function(error, results, fields){
             if(error){
                 console.log(error)
