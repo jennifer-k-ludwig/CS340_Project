@@ -113,9 +113,12 @@ module.exports = function(){
 				res.end();
 			}
 			
-			current = results[0];
+               current = results[0];
+               current.birth_date = current.birth_date.toISOString().substring(0, 10); // converts the ISO DATE format into a YYYY-MM-DD format
 			console.log("Current:");
-			console.log(current);
+               console.log(current);
+               
+               
 			complete(res,req,context,current);
 		});
 	}
