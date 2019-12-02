@@ -1,11 +1,18 @@
+{{#if display_login_error}}
+     <br>
+         <h3 align="center">We couldn't sign you in.</h3>
+         <h5 align="center">Email or password is incorrect</h5>
+          
+{{else}}
+{{/if}}
 <form id="login_form" align="center" action="/login" method="post">
-	Username: 
-	<input name="email_address" type="email"><br>
-	Password:
-	<input name="password" type="password"><br>
-	<input type="submit" value="Login">
+     Username:
+     <input name="email_address" type="email" placeholder="Enter your email address.."><br>
+     Password:
+     <input name="password" type="password"><br>
+     <input type="submit" value="Login">
 </form>
 
 <form id="new_user_form" align="center" method="GET" action="/new_user">
-	<input type="submit" value="New User">
+     <input type="submit" value="New User">
 </form>
