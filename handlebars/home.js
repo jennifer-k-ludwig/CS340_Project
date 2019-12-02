@@ -3,6 +3,13 @@ module.exports = function() {
 	var express = require('express');
     var router = express.Router();
 
+     // Helper function to make the user login if they haven't already
+     function forceLogin(req) {
+          console.log("session ID", req.session.user_id);
+          return req.session.user_id === undefined;
+
+     }
+
 
 	function getName(res, req, mysql, session, context, complete){
         mysql.pool.query("SELECT first_name FROM users WHERE user_id=?", [req.session.user_id], function(error, results, fields){
@@ -86,24 +93,34 @@ module.exports = function() {
 
 	
 	//Home Page get and post requests
-	router.get('/', function(req,res){
-		var callbackCount = 0;
-		var context = {};
-		var mysql = req.app.get('mysql');
-		var session = req.app.get('session');
+     router.get('/', function (req, res) {
+          // if the user has not logged in, make them do so
+          if (forceLogin(req)) {
+               res.redirect('/login');
+          }
 
-		getName(res,req,mysql,session,context,complete);
-		getRecipes(res,req,mysql,session,context,complete);
-		getDiet(res,req,mysql,session,context,complete);
-		function complete(){
-			callbackCount++;
-			if(callbackCount >= 3){
-				res.render('home', context);
-			}
-		}
+          else {
+               var callbackCount = 0;
+               var context = {};
+               var mysql = req.app.get('mysql');
+               var session = req.app.get('session');
+
+               getName(res, req, mysql, session, context, complete);
+               getRecipes(res, req, mysql, session, context, complete);
+               getDiet(res, req, mysql, session, context, complete);
+               function complete() {
+                    callbackCount++;
+                    if (callbackCount >= 3) {
+                         res.render('home', context);
+                    }
+               }
+
+          }
+		
 	});
 		
-	router.post('/', function(req,res) {
+     router.post('/', function (req, res) {
+
 		if(req.body.log_out) {
 			req.session.destroy();
 			res.redirect('/login');

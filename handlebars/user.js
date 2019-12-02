@@ -1,8 +1,15 @@
 //User Page get and post requests
 module.exports = function(){
     var express = require('express');
-    var router = express.Router();
-	
+     var router = express.Router();
+
+     // Helper function to make the user login if they haven't already
+     function forceLogin(req) {
+          console.log("session ID", req.session.user_id);
+          return req.session.user_id === undefined;
+
+     }
+
 	//deleteUser - Deletes user from database, destroys the session, and redirects to login page.
 	function deleteUser (res,req,mysql) {
 			mysql.pool.query('DELETE FROM users WHERE user_id=?', 
@@ -131,44 +138,55 @@ module.exports = function(){
 	}
 	
 	router.get('/', function(req,res){
+          // if the user has not logged in, make them do so
+          if (forceLogin(req)) {
+               res.redirect('/login');
+          }
+
+          else {
+               var callbackCount = 0;
+               var mysql = req.app.get('mysql');
+               var session = req.app.get('session');
+               var context = {};
+               var current;
+
+               currentUserGET(res, req, mysql, session, complete, context, current);
+
+               function complete(res, req, context, current) {
+                    callbackCount++;
+                    if (callbackCount >= 1) {
+                         context.first_name = current.first_name;
+                         context.last_name = current.last_name;
+                         context.birth_date = current.birth_date;
+                         context.max_calories = current.max_calories;
+                         context.email_address = current.email_address;
+                         context.password = current.password;
+                         context.no_meat_checked = false;
+                         res.render('user', context);
+                    }
+               }
+
+          }
 		
-		var callbackCount = 0;		
-		var mysql = req.app.get('mysql');
-		var session = req.app.get('session');
-		var context = {};	
-		var current;
-		
-		currentUserGET(res, req, mysql, session, complete, context, current);
-		
-		function complete(res,req,context,current){
-			callbackCount++;
-			if(callbackCount >= 1){
-				context.first_name = current.first_name;
-				context.last_name = current.last_name;
-				context.birth_date = current.birth_date;
-				context.max_calories = current.max_calories;
-				context.email_address = current.email_address;
-				context.password = current.password;
-				context.no_meat_checked = false;
-				res.render('user',context);
-			}
-		}
 	});
 
 	router.post('/', function(req,res){
-		
-		var mysql = req.app.get('mysql');
-		var session = req.app.get('session');
-		var current;
-			
-		if (req.body.update) {
-			convertDiet(req);
-			currentUserPOST(res, req, mysql, session, current);
-		}
-		
-		if (req.body.delete) {
-			deleteUser(res,req,mysql);
-		}	
+
+          var mysql = req.app.get('mysql');
+          var session = req.app.get('session');
+          var current;
+
+          if (req.body.update) {
+               convertDiet(req);
+               currentUserPOST(res, req, mysql, session, current);
+          }
+
+          if (req.body.delete) {
+               deleteUser(res, req, mysql);
+          }	
+
+          
+
 	});
 	
 	return router;
