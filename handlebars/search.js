@@ -248,7 +248,8 @@ module.exports = function() {
 			else element.recipe_no_soy = "No";
 		});
 	}
-
+	
+     // if the user has not logged in, make them do so	
      router.all('*', function (req, res, next) {
           if (req.session.user_id === undefined) {
                console.log("redirect worked");
