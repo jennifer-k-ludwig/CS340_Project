@@ -1,14 +1,7 @@
 module.exports = function() {
 
 	var express = require('express');
-    var router = express.Router();
-
-     // Helper function to make the user login if they haven't already
-     function forceLogin(req) {
-          console.log("session ID", req.session.user_id);
-          return req.session.user_id === undefined;
-
-     }
+     var router = express.Router();
 
 
 	function getName(res, req, mysql, session, context, complete){
@@ -89,32 +82,35 @@ module.exports = function() {
 			if (element.diet_no_soy === 1) element.diet_no_soy = "Yes";
 			else element.diet_no_soy = "No";
 		});
-	}
+     }
 
-	
+     // if the user has not logged in, make them do so
+     router.all('*', function (req, res, next) {
+          if (req.session.user_id === undefined) {
+               console.log("redirect worked");
+               res.redirect('/login')
+          }
+          else {
+               next();
+          }
+     });
+
 	//Home Page get and post requests
      router.get('/', function (req, res) {
-          // if the user has not logged in, make them do so
-          if (forceLogin(req)) {
-               res.redirect('/login');
-          }
 
-          else {
-               var callbackCount = 0;
-               var context = {};
-               var mysql = req.app.get('mysql');
-               var session = req.app.get('session');
+          var callbackCount = 0;
+          var context = {};
+          var mysql = req.app.get('mysql');
+          var session = req.app.get('session');
 
-               getName(res, req, mysql, session, context, complete);
-               getRecipes(res, req, mysql, session, context, complete);
-               getDiet(res, req, mysql, session, context, complete);
-               function complete() {
-                    callbackCount++;
-                    if (callbackCount >= 3) {
-                         res.render('home', context);
-                    }
+          getName(res, req, mysql, session, context, complete);
+          getRecipes(res, req, mysql, session, context, complete);
+          getDiet(res, req, mysql, session, context, complete);
+          function complete() {
+               callbackCount++;
+               if (callbackCount >= 3) {
+                    res.render('home', context);
                }
-
           }
 		
 	});

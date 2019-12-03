@@ -138,8 +138,19 @@ module.exports = function(){
 			
 			updateDiet(res, req, mysql, session, current);
 		});
-	}
-	
+     }
+
+	// if the user has not logged in, make them do so
+     router.all('*', function (req, res, next) {
+          if (req.session.user_id === undefined) {
+               console.log("redirect worked");
+               res.redirect('/login')
+          }
+          else {
+               next();
+          }
+     });
+
 	router.get('/', function(req,res){
           // if the user has not logged in, make them do so
           if (forceLogin(req)) {
