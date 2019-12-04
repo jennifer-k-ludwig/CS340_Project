@@ -1,7 +1,7 @@
 module.exports = function() {
 
 	var express = require('express');
-     var router = express.Router();
+    var router = express.Router();
 
 
 	// Helper function to get query results from the user's search
@@ -19,67 +19,192 @@ module.exports = function() {
 		else var user_search_text = req.params.food_or_recipe_name;
 
 		// if the user searched for foods, then this if statement will be satisfied
-		if (user_search_type === "food")
-          {
-               // query for to select all foods from the foods table that match the user's diet preferences.
-			var query = "SELECT * FROM foods INNER JOIN diets ON contains_meat<>diet_no_meat AND contains_dairy<>diet_no_dairy AND contains_nuts<>diet_no_nuts AND contains_shellfish<>diet_no_shellfish AND contains_carbs<>diet_no_carbs AND contains_animal_products<>diet_no_animal_products AND contains_gluten<>diet_no_gluten AND contains_soy<>diet_no_soy WHERE diet_id=? AND food_name LIKE" + mysql.pool.escape('%' + user_search_text + '%');
-			var inserts = [req.session.diet_id];
-			mysql.pool.query(query, inserts, function(error, results, fields){
-				if(error){
-					res.write(JSON.stringify(error));
-					res.end();
+		if (user_search_type === "food") {
+               // query to select all foods from the foods table that match the user's diet preferences.
+			mysql.pool.query("SELECT * FROM diets WHERE diet_id=?", [req.session.diet_id], function (error, results) {
+				var user_diet = results[0];
+				var dietCount = 0;			
+				var queryString = "SELECT * FROM foods WHERE ";				
+				
+				if (user_diet.diet_no_meat==1) {			
+					queryString += "contains_meat=0";				
+					dietCount++;				
+				}				
+								
+				if (user_diet.diet_no_dairy==1) {				
+					if (dietCount>=1)				
+						queryString += " AND ";				
+					queryString += "contains_dairy=0";				
+					dietCount++;				
+				}				
+								
+				if (user_diet.diet_no_nuts==1) {				
+					if (dietCount>=1)				
+						queryString += " AND ";				
+					queryString += "contains_nuts=0";
+					dietCount++;			
+				}				
+				
+				if (user_diet.diet_no_shellfish==1) {			
+					if (dietCount>=1)			
+						queryString += " AND ";			
+					queryString += "contains_shellfish=0";			
+					dietCount++;				
 				}
-				else {
-
-                         // This helper function changes the 1s and 0s of the boolean values into Yes's and No's
-					parseFoodResults(results);
-
-					// set display_food to true so that search.handlebars displays the food table and the add food form
-					context.display_food = true;
-
-                         // store these attributes just in case we need them (this won't affect anything for the time being)
-					context.user_search_type = user_search_type;
-					context.user_search_text = user_search_text;
-
-                         // store the query results in a food data variable.
-                         context.food = results;
-
-					complete();
+								
+				if (user_diet.diet_no_animal_products==1) {	
+					if (dietCount>=1)				
+						queryString += " AND ";				
+					queryString += "contains_animal_products=0";				
+					dietCount++;				
+				}				
+				
+				if (user_diet.diet_no_gluten==1) {
+					if (dietCount>=1)	
+						queryString += " AND ";
+					queryString += "contains_gluten=0";
+					dietCount++;				
+				}				
+								
+				if (user_diet.diet_no_soy==1) {				
+					if (dietCount>=1)				
+									queryString += " AND ";				
+					queryString += "contains_soy=0";				
+					dietCount++;				
 				}
-			});
-          }
+								
+				if (user_diet.diet_no_carbs==1) {				
+					if (dietCount>=1)				
+						queryString += " AND ";				
+					queryString += "contains_carbs=0";				
+					dietCount++;				
+				}
+				
+				if (dietCount==0) {			
+					queryString += "1";			
+				}				
+				
+				queryString += " AND food_name LIKE " + mysql.pool.escape('%' + user_search_text + '%');
+				
+				var inserts = [req.session.diet_id];
+				mysql.pool.query(queryString, inserts, function(error, results, fields){
+					if(error){
+						res.write(JSON.stringify(error));
+						res.end();
+					}
+					else {
+							// This helper function changes the 1s and 0s of the boolean values into Yes's and No's
+						parseFoodResults(results);
+	
+						// set display_food to true so that search.handlebars displays the food table and the add food form
+						context.display_food = true;
+	
+							// store these attributes just in case we need them (this won't affect anything for the time being)
+						context.user_search_type = user_search_type;
+						context.user_search_text = user_search_text;
+	
+							// store the query results in food data variable.
+							context.food = results;
+	
+						complete();
+					}
+				});
+			});			
+        }
 
           // if the user searched for recipes, then this if statement will be satisfied
-		else if (user_search_type === "recipe")
-          {
-               // query for to select all recipes from the recipes table that match the user's diet preferences.
-			var query = "SELECT * FROM recipes INNER JOIN diets ON recipe_no_meat=diet_no_meat AND recipe_no_dairy=diet_no_dairy AND recipe_no_nuts=diet_no_nuts AND recipe_no_shellfish=diet_no_shellfish AND recipe_no_carbs=diet_no_carbs AND recipe_no_animal_products=diet_no_animal_products AND recipe_no_gluten=diet_no_gluten AND recipe_no_soy=diet_no_soy WHERE diet_id=? AND recipe_name LIKE " + mysql.pool.escape('%' + user_search_text + '%');
-			var inserts = [req.session.diet_id];
-			mysql.pool.query(query, inserts, function(error, results, fields){
-				if(error){
-					res.write(JSON.stringify(error));
-					res.end();
+		else if (user_search_type === "recipe") {
+               // query to select all recipes from the recipes table that match the user's diet preferences. 			
+			mysql.pool.query("SELECT * FROM diets WHERE diet_id=?", [req.session.diet_id], function (error, results) {
+				var user_diet = results[0];
+				var dietCount = 0;			
+				var queryString = "SELECT * FROM recipes WHERE ";				
+				
+				if (user_diet.diet_no_meat==1) {			
+					queryString += "recipe_no_meat=1";				
+					dietCount++;				
+				}				
+								
+				if (user_diet.diet_no_dairy==1) {				
+					if (dietCount>=1)				
+						queryString += " AND ";				
+					queryString += "recipe_no_dairy=1";				
+					dietCount++;				
+				}				
+								
+				if (user_diet.diet_no_nuts==1) {				
+					if (dietCount>=1)				
+						queryString += " AND ";				
+					queryString += "recipe_no_nuts=1";
+					dietCount++;			
+				}				
+				
+				if (user_diet.diet_no_shellfish==1) {			
+					if (dietCount>=1)			
+						queryString += " AND ";			
+					queryString += "recipe_no_shellfish=1";			
+					dietCount++;				
 				}
-				else 
-				{
-                         // This helper function changes the 1s and 0s of the boolean values into Yes's and No's
-					parseRecipeResults(results);
-
-					// set display_recipe to true so that search.handlebars displays the recipe table and the add recipe form
-					context.display_recipe = true;
-
-                         // store these attributes just in case we need them (this won't affect anything for the time being)
-					context.user_search_type = user_search_type;
-					context.user_search_text = user_search_text;
-
-                         // store the query results in a recipe data variable.
-                         context.recipe = results;
-
-					complete();
+								
+				if (user_diet.diet_no_animal_products==1) {	
+					if (dietCount>=1)				
+						queryString += " AND ";				
+					queryString += "recipe_no_animal_products=1";				
+					dietCount++;				
+				}				
+				
+				if (user_diet.diet_no_gluten==1) {
+					if (dietCount>=1)	
+						queryString += " AND ";
+					queryString += "recipe_no_gluten=1";
+					dietCount++;				
+				}				
+								
+				if (user_diet.diet_no_soy==1) {				
+					if (dietCount>=1)				
+									queryString += " AND ";				
+					queryString += "recipe_no_soy=1";				
+					dietCount++;				
 				}
-			});
+								
+				if (user_diet.diet_no_carbs==1) {				
+					if (dietCount>=1)				
+						queryString += " AND ";				
+					queryString += "recipe_no_carbs=1";				
+					dietCount++;				
+				}
+				
+				if (dietCount==0) {			
+					queryString += "1";			
+				}				
+				
+				queryString += " AND recipe_name LIKE " + mysql.pool.escape('%' + user_search_text + '%');
+				
+				var inserts = [req.session.diet_id];
+				mysql.pool.query(queryString, inserts, function(error, results, fields){
+					if(error){
+						res.write(JSON.stringify(error));
+						res.end();
+					}
+					else {
+							// This helper function changes the 1s and 0s of the boolean values into Yes's and No's
+						parseRecipeResults(results);
+	
+						// set display_recipe to true so that search.handlebars displays the recipe table and the add recipe form
+						context.display_recipe = true;
+	
+							// store these attributes just in case we need them (this won't affect anything for the time being)
+						context.user_search_type = user_search_type;
+						context.user_search_text = user_search_text;
+	
+							// store the query results in a recipe data variable.
+							context.recipe = results;
+	
+						complete();
+					}
+				});
+			});			
 		}
-
 	}
 	
 	// Helper function to show a recipe's ingredients (i.e. foods associated with a recipe)
