@@ -1,6 +1,9 @@
 #user_input_search {
     width: 50em;
 }
+#user_food_search {
+    width:50em;
+}
 
 #displayIngredientsDiv {
     display:none;
