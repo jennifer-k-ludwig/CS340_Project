@@ -1,26 +1,26 @@
-<form action="/home" method="GET">
-	<input type="submit" value="Home">
-</form>
-<form action="/search" method="GET">
-	<input type="submit" value="Search">
-</form>
-<form action="/user" method="GET">
-	<input type="submit" value="Account Settings">
-</form>
-<form action="/home" method="POST">
-	<input type="submit" name="log_out" value="Log Out">
-</form>
+<div id="navBar">
+<ul>
+     <li><a class= "home_nav" href="/home"  >Home</a></li>
+     <li><a class= "serach_nav" href="/search" style="background-color: green;">Food & Recipes</a></li>
+     <li><a class= "user_nav" href="/user">Account Settings</a></li>
+     <li><form action="/home" method="POST"> <input type="submit" name="log_out" value="Log Out"> </form>  </li>
+     
+</ul>
+</div>
 
 <!-- Form to search for a food or recipe. Form does not send
-to anywhere. Our function search_foods_or_recipes() redirects us-->
+to anywhere. Onsubmit is a function and then returns false to prevent the form's default action
+     Our function search_foods_or_recipes() applies the search mechanism we need.-->
 <h3 align="center">Search for a food or recipe</h3>
-<form align="center" action="" method="" onsubmit="search_foods_or_recipes(); return false;">
-	<label> Type: <select id="food_or_recipe">
-		<option value="food">Food</option>
-		<option value="recipe">Recipe</option></select>
-	</label>
-	<label> Name: <input id ="user_input_search" type="search" placeholder="Leave blank to search all of a specific type"></label>	
-	<input type="button" value="Search" onclick="search_foods_or_recipes()">
+<form align="center" onsubmit="search_foods_or_recipes(); return false;">
+     <label>
+          Type: <select id="food_or_recipe">
+               <option value="food">Food</option>
+               <option value="recipe">Recipe</option>
+          </select>
+     </label>
+     <label> Name: <input id="user_input_search" type="search" placeholder="Leave blank to search all of a specific type"></label>
+     <input type="button" value="Search" onclick="search_foods_or_recipes()">
 </form>
 
 
@@ -29,314 +29,371 @@ to anywhere. Our function search_foods_or_recipes() redirects us-->
 Using handlebars to hide the displays until the user decides to search
 -->
 <div id="search_results">
-	<div class="url_search_path" id="user_search_type" value="{{user_search_type}}"></div>
-	<div class="url_search_path" id="user_search_text" value="{{user_search_text}}"></div>
+     <div class="url_search_path" id="user_search_type" value="{{user_search_type}}"></div>
+     <div class="url_search_path" id="user_search_text" value="{{user_search_text}}"></div>
 
-	{{#if display_food}}
-	<h2 align="center">Search results... </h2>
-		<table align="center">
-			<thead>
-				<th>Food</th>
-				<th>Calories per Ounce</th>
-				<th>Meat</th>
-				<th>Dairy</th>
-				<th>Nuts</th>
-				<th>Shellfish</th>
-				<th>Carbs</th>
-				<th>Animal Products</th>
-				<th>Gluten</th>  
-				<th>Soy</th>
-				<th>Delete Food from Database</th>
-			</thead> 
+     {{#if display_food}}
+     <h2 align="center">Food Search results... </h2>
+     <h4 align="center">Note: Foods will be based on your diet </h4>
+     <table align="center">
+          <thead>
+               <tr>
+                    <th>Food</th>
+                    <th>Calories per Ounce</th>
+                    <th>Meat</th>
+                    <th>Dairy</th>
+                    <th>Nuts</th>
+                    <th>Shellfish</th>
+                    <th>Carbs</th>
+                    <th>Animal Products</th>
+                    <th>Gluten</th>
+                    <th>Soy</th>
+                    <th>Delete Food from Database</th>
+               </tr>
+          </thead>
 
-			<tbody>
-				{{#each food}}
-				<tr>
-					<td>{{food_name}}</td>
-					<td>{{calories_ounce}}</td>
-					<td>{{contains_meat}}</td>
-					<td>{{contains_dairy}}</td>
-					<td>{{contains_nuts}}</td>
-					<td>{{contains_shellfish}}</td>
-					<td>{{contains_carbs}}</td>
-					<td>{{contains_animal_products}}</td>
-					<td>{{contains_gluten}}</td>
-					<td>{{contains_soy}}</td>
-					<td> <button class = "deleteFoodButton" value="{{food_id}}"> Delete Food </button></td>
-				</tr>
-				{{/each}}
-			</tbody>
-		</table>
-	{{else}}
-	{{/if}}
-	
-	{{#if display_recipe}}
-	<h2 align="center">Search results... </h2>
-		<table align="center" id = "recipe_table">
-			<thead>
-				<th>Recipe</th>
-				<th>Meat</th>
-				<th>Dairy</th>
-				<th>Nuts</th>
-				<th>Shellfish</th>
-				<th>Carbs</th>
-				<th>Animal Products</th>
-				<th>Gluten</th>  
-				<th>Soy</th>
-				<th>Show Ingredients</th> 
-				<th>Update Ingredients</th>
-				<th>Update Recipe Properties</th>
-				<th>Add to your recipe list</th>
-				<th>Delete Recipe from Database</th> 
-			</thead> 
+          <tbody>
+               {{#each food}}
+               <tr>
+                    <td>{{food_name}}</td>
+                    <td>{{calories_ounce}}</td>
+                    <td>{{contains_meat}}</td>
+                    <td>{{contains_dairy}}</td>
+                    <td>{{contains_nuts}}</td>
+                    <td>{{contains_shellfish}}</td>
+                    <td>{{contains_carbs}}</td>
+                    <td>{{contains_animal_products}}</td>
+                    <td>{{contains_gluten}}</td>
+                    <td>{{contains_soy}}</td>
+                    <td> <button class="deleteFoodButton" value="{{food_id}}"> Delete Food </button></td>
+               </tr>
+               {{/each}}
+          </tbody>
+     </table>
+     {{else}}
+     {{/if}}
 
-			<tbody>
-				{{#each recipe}}
-				<tr>
-					<td>{{recipe_name}}</td>
-					<td>{{recipe_no_meat}}</td>
-					<td>{{recipe_no_dairy}}</td>
-					<td>{{recipe_no_nuts}}</td>
-					<td>{{recipe_no_shellfish}}</td>
-					<td>{{recipe_no_carbs}}</td>
-					<td>{{recipe_no_animal_products}}</td>
-					<td>{{recipe_no_gluten}}</td>
-					<td>{{recipe_no_soy}}</td>
-					<td> <button class = "showIngredientsButton" value="{{recipe_id}}">Show Ingredients</button></td>
-					<td> <button class = "updateIngredientsButton" value="{{recipe_id}}"> Update Ingredients </td>
-					<td> <button class = "updateRecipePropButton" value="{{recipe_id}}"> Update Recipe </button></td>
-					<td> <button class = "addRecipeToUserListButton" value="{{recipe_id}}"> Add </button></td>
-					<td> <button class = "deleteRecipeButton" value="{{recipe_id}}"> Delete </button></td>
-				</tr>
-				{{/each}}
-			</tbody>
-		</table>
-		<br> <br>
-	{{else}}	
-	{{/if}}
+     {{#if display_recipe}}
+     <h2 align="center">Recipe Search results... </h2>
+     <h4 align="center">Note: Recipes will be based on your diet </h4>
+     <table align="center" id="recipe_table">
+          <thead>
+               <tr>
+                    <th>Recipe</th>
+                    <th>Meat</th>
+                    <th>Dairy</th>
+                    <th>Nuts</th>
+                    <th>Shellfish</th>
+                    <th>Carbs</th>
+                    <th>Animal Products</th>
+                    <th>Gluten</th>
+                    <th>Soy</th>
+                    <th>Show Ingredients</th>
+                    <th>Update Ingredients</th>
+                    <th>Update Recipe Properties</th>
+                    <th>Add to your recipe list</th>
+                    <th>Delete Recipe from Database</th>
+               </tr>
+          </thead>
+
+          <tbody>
+               {{#each recipe}}
+               <tr>
+                    <td>{{recipe_name}}</td>
+                    <td>{{recipe_no_meat}}</td>
+                    <td>{{recipe_no_dairy}}</td>
+                    <td>{{recipe_no_nuts}}</td>
+                    <td>{{recipe_no_shellfish}}</td>
+                    <td>{{recipe_no_carbs}}</td>
+                    <td>{{recipe_no_animal_products}}</td>
+                    <td>{{recipe_no_gluten}}</td>
+                    <td>{{recipe_no_soy}}</td>
+                    <td> <button class="showIngredientsButton" value="{{recipe_id}}">Show Ingredients</button></td>
+                    <td> <button class="updateIngredientsButton" value="{{recipe_id}}"> Update Ingredients</button> </td>
+                    <td> <button class="updateRecipePropButton" value="{{recipe_id}}"> Update Recipe </button></td>
+                    <td> <button class="addRecipeToUserListButton" value="{{recipe_id}}"> Add </button></td>
+                    <td> <button class="deleteRecipeButton" value="{{recipe_id}}"> Delete </button></td>
+               </tr>
+               {{/each}}
+          </tbody>
+     </table>
+     <br> <br>
+     {{else}}
+     {{/if}}
 </div>
 
-<div id="displayIngredientsDiv" align="center"> 
-	<button id="awesome2" onclick="hideIngredientTable()"> Hide Table </button>
-</div> 
-<div id="displayIngredientsDiv2"> 
+<div id="displayIngredientsDiv" align="center">
+     <button id="awesome2" onclick="hideIngredientTable()"> Hide Table </button>
+</div>
+<div id="displayIngredientsDiv2">
 
-</div> 
+</div>
 <div id="displayUpdateIngredientsDiv"> </div>
+
 <!-----------------------------  UPDATE RECIPE SECTION -------------------------->
+<!-- This section will not be visible until the user clicks on the "Show Ingredients" button
+     after they have search for recipes-->
 <br>
 <br>
 <div id="updatePropertiesHideButton" align="center">
-	<button onclick="hideUpdateRecipeProp()">Hide Form</button>
+     <button onclick="hideUpdateRecipeProp()">Hide Form</button>
 </div>
 
-<div id="updateProperties" align="center"> 
-	<div id="updatePropertiesForm">
-		<form id = "updateRecipeForm" align="center" action = "" method="">
-		Does it contain meat?
-		<select name="update_recipe_meat">
-			<option value=0>Yes</option> 
-			<option value=1>No</option>
-		</select>	 	
-		<br>
+<div id="updateProperties" align="center">
+     <div id="updatePropertiesForm">
+          <form id="updateRecipeForm" align="center">
+               Does it contain meat?
+               <select name="update_recipe_meat">
+                    <option value=0>Yes</option>
+                    <option value=1>No</option>
+               </select>
+               <br>
 
-		Does it contain dairy?
-		<select name="update_recipe_dairy">
-			<option value=0>Yes</option> 
-			<option value=1>No</option>  
-		</select>
-		<br>	
+               Does it contain dairy?
+               <select name="update_recipe_dairy">
+                    <option value=0>Yes</option>
+                    <option value=1>No</option>
+               </select>
+               <br>
 
-		Does it contain nuts?
-		<select name="update_recipe_nuts">
-			<option value=0>Yes</option> 
-			<option value=1>No</option>  
-		</select>
-		<br>	
+               Does it contain nuts?
+               <select name="update_recipe_nuts">
+                    <option value=0>Yes</option>
+                    <option value=1>No</option>
+               </select>
+               <br>
 
-		Does it contain shellfish?
-		<select name="update_recipe_shellfish">
-			<option value=0>Yes</option> 
-			<option value=1>No</option>  
-		</select>
-		<br>	
+               Does it contain shellfish?
+               <select name="update_recipe_shellfish">
+                    <option value=0>Yes</option>
+                    <option value=1>No</option>
+               </select>
+               <br>
 
-		Does it contain carbs?
-		<select name="update_recipe_carbs">
-			<option value=0>Yes</option> 
-			<option value=1>No</option> 
-		</select>
-		<br>	
+               Does it contain carbs?
+               <select name="update_recipe_carbs">
+                    <option value=0>Yes</option>
+                    <option value=1>No</option>
+               </select>
+               <br>
 
-		Does it contain animal products?
-		<select name="update_recipe_animal">
-			<option value=0>Yes</option> 
-			<option value=1>No</option>  
-		</select>
-		<br>	
+               Does it contain animal products?
+               <select name="update_recipe_animal">
+                    <option value=0>Yes</option>
+                    <option value=1>No</option>
+               </select>
+               <br>
 
-		Does it contain gluten?
-		<select name="update_recipe_gluten">
-			<option value=0>Yes</option> 
-			<option value=1>No</option> 
-		</select>
-		<br>	
+               Does it contain gluten?
+               <select name="update_recipe_gluten">
+                    <option value=0>Yes</option>
+                    <option value=1>No</option>
+               </select>
+               <br>
 
-		Does it contain soy?
-		<select name="update_recipe_soy">
-			<option value=0>Yes</option> 
-			<option value=1>No</option> 
-		</select>
-		</form>
-		<br>
-		<button id = "sendRecipeUpdate" value=""> Save Changes </button>
-	</div>
+               Does it contain soy?
+               <select name="update_recipe_soy">
+                    <option value=0>Yes</option>
+                    <option value=1>No</option>
+               </select>
+          </form>
+          <br>
+          <button id="sendRecipeUpdate" value=""> Save Changes </button>
+     </div>
 </div>
 
 
 <!-----------------------------  ADD FOOD SECTION -------------------------->
+<!-- This section will provide the user a form for them to send to our server
+     in order to add a food. This is only visible after the user searches for a food-->
 {{#if display_food}}
 <br>
 <br>
 <hr size="3" noshade>
 <h3 align="center">Don't see a food? Add one!</h3>
-<form id="addFoodForm" align="center" action = "" method="">
+<form id="addFoodForm" align="center">
 
-	Name: <input type="text" name="add_food_name" required>
-	<br>
+     Name: <input type="text" name="add_food_name" placeholder="Enter your food's name...">
+     <br>
 
-	How many calories per ounce?
-	<input type="number" name="add_food_calories" min="0"> 
-	<br>
+     How many calories per ounce?
+     <input type="number" name="add_food_calories" min="0">
+     <br>
 
-	Does it contain meat?
-	<input type="radio" name="add_food_meat" value=1>Yes 
-	<input type="radio" name="add_food_meat" value=0>No 	
-	<br>
+     Does it contain meat?
+     <select name="add_food_meat">
+          <option value=1>Yes</option>
+          <option value=0>No</option>
+     </select>
+     <br>
 
-	Does it contain dairy?
-	<input type="radio" name="add_food_dairy" value=1>Yes 
-	<input type="radio" name="add_food_dairy" value=0>No 
-	<br>	
+     Does it contain dairy?
+     <select name="add_food_dairy">
+          <option value=1>Yes</option>
+          <option value=0>No</option>
+     </select>
+     <br>
 
-	Does it contain nuts?
-	<input type="radio" name="add_food_nuts" value=1>Yes 
-	<input type="radio" name="add_food_nuts" value=0>No 
-	<br>	
+     Does it contain nuts?
+     <select name="add_food_nuts">
+          <option value=1>Yes</option>
+          <option value=0>No</option>
+     </select>
+     <br>
 
-	Does it contain shellfish?
-	<input type="radio" name="add_food_shellfish" value=1>Yes 
-	<input type="radio" name="add_food_shellfish" value=0>No 
-	<br>	
+     Does it contain shellfish?
+     <select name="add_food_shellfish">
+          <option value=1>Yes</option>
+          <option value=0>No</option>
+     </select>
+     <br>
 
-	Does it contain carbs?
-	<input type="radio" name="add_food_carbs" value=1>Yes 
-	<input type="radio" name="add_food_carbs" value=0>No 
-	<br>	
+     Does it contain carbs?
+     <select name="add_food_carbs">
+          <option value=1>Yes</option>
+          <option value=0>No</option>
+     </select>
+     <br>
 
-	Does it contain animal products?
-	<input type="radio" name="add_food_animal" value=1>Yes 
-	<input type="radio" name="add_food_animal" value=0>No 
-	<br>	
+     Does it contain animal products?
+     <select name="add_food_animal">
+          <option value=1>Yes</option>
+          <option value=0>No</option>
+     </select>
+     <br>
 
-	Does it contain gluten?
-	<input type="radio" name="add_food_gluten" value=1>Yes 
-	<input type="radio" name="add_food_gluten" value=0>No 
-	<br>	
+     Does it contain gluten?
+     <select name="add_food_gluten">
+          <option value=1>Yes</option>
+          <option value=0>No</option>
+     </select>
+     <br>
 
-	Does it contain soy?
-	<input type="radio" name="add_food_soy" value=1>Yes 
-	<input type="radio" name="add_food_soy" value=0>No 
-	<br>
+     Does it contain soy?
+     <select name="add_food_soy">
+          <option value=1>Yes</option>
+          <option value=0>No</option>
+     </select>
+     <br>
 
-	<button id = "addFoodButton" value=""> Add Food </button>
-	<!-- <input type="submit" value="Add Food!"><br>-->		
+     <button id="addFoodButton" value=""> Add Food </button>
+     <br>
+     <h3 id="addFoodError"></h3>
 </form>
 {{else}}
 {{/if}}
 <!-----------------------------  ADD RECIPE SECTION -------------------------->
+<!-- This section will provide the user a form for them to send to our server
+     in order to add a recipe. This is only visible after the user searches for a recipe-->
 <br>
 <br>
 {{#if display_recipe}}
 <hr size="3" noshade>
 <h3 align="center">Don't see a recipe? Add one!</h3>
-<form id="addRecipeForm" align="center" action = "" method="">
+<form id="addRecipeForm" align="center">
 
-	Name: <input type="text" name="add_recipe_name" required>
-	<br>
+     Name: <input type="text" name="add_recipe_name" placeholder="Enter your recipe's name...">
+     <br>
 
-	Does it contain meat?
-	<input type="radio" name="add_recipe_meat" value=0>Yes 
-	<input type="radio" name="add_recipe_meat" value=1>No 	
-	<br>
+     Does it contain meat?
+     <select name="add_recipe_meat">
+          <option value=0>Yes</option>
+          <option value=1>No</option>
+     </select>
+     <br>
 
-	Does it contain dairy?
-	<input type="radio" name="add_recipe_dairy" value=0>Yes 
-	<input type="radio" name="add_recipe_dairy" value=1>No 
-	<br>	
+     Does it contain dairy?
+     <select name="add_recipe_dairy">
+          <option value=0>Yes</option>
+          <option value=1>No</option>
+     </select>
+     <br>
 
-	Does it contain nuts?
-	<input type="radio" name="add_recipe_nuts" value=0>Yes 
-	<input type="radio" name="add_recipe_nuts" value=1>No 
-	<br>	
+     Does it contain nuts?
+     <select name="add_recipe_nuts">
+          <option value=0>Yes</option>
+          <option value=1>No</option>
+     </select>
+     <br>
 
-	Does it contain shellfish?
-	<input type="radio" name="add_recipe_shellfish" value=0>Yes 
-	<input type="radio" name="add_recipe_shellfish" value=1>No 
-	<br>	
+     Does it contain shellfish?
+     <select name="add_recipe_shellfish">
+          <option value=0>Yes</option>
+          <option value=1>No</option>
+     </select>
+     <br>
 
-	Does it contain carbs?
-	<input type="radio" name="add_recipe_carbs" value=0>Yes 
-	<input type="radio" name="add_recipe_carbs" value=1>No 
-	<br>	
+     Does it contain carbs?
+     <select name="add_recipe_carbs">
+          <option value=0>Yes</option>
+          <option value=1>No</option>
+     </select>
+     <br>
 
-	Does it contain animal products?
-	<input type="radio" name="add_recipe_animal" value=0>Yes 
-	<input type="radio" name="add_recipe_animal" value=1>No 
-	<br>	
+     Does it contain animal products?
+     <select name="add_recipe_animal">
+          <option value=0>Yes</option>
+          <option value=1>No</option>
+     </select>
+     <br>
 
-	Does it contain gluten?
-	<input type="radio" name="add_recipe_gluten" value=0>Yes 
-	<input type="radio" name="add_recipe_gluten" value=1>No 
-	<br>	
+     Does it contain gluten?
+     <select name="add_recipe_gluten">
+          <option value=0>Yes</option>
+          <option value=1>No</option>
+     </select>
+     <br>
 
-	Does it contain soy?
-	<input type="radio" name="add_recipe_soy" value=0>Yes 
-	<input type="radio" name="add_recipe_soy" value=1>No 
-	<br>
+     Does it contain soy?
+     <select name="add_recipe_soy">
+          <option value=0>Yes</option>
+          <option value=1>No</option>
+     </select>
+     <br>
 
-	<button id = "addRecipeButton" value=""> Add Recipe </button>
-	<!--	<input type="submit" value="Add Recipe!"><br>	-->		
+     <button id="addRecipeButton" value=""> Add Recipe </button>
+     <br>
+     <h3 id="addRecipeError"></h3>
 </form>
-<br><br>
+<br>
+<br>
 {{else}}
 {{/if}}
-<script id="showIngredientTemplate" type="text/x-handlebars-template">
-	\{{#if display_ingredients}}
-	<h2 align="center"> \{{user_recipe}}'s Ingredients </h2>
-	<table align="center" id = "recipe_table">
-		<thead>
-			<th>Food</th>
-			<th>Calories Per Ounce</th>
-		</thead> 
 
-		<tbody>
-			\{{#each ingredient}}
-			<tr>
-				<td>\{{food_name}}</td>
-				<td>\{{calories_ounce}}</td>
-			</tr>
-			\{{/each}}
-		</tbody>
-	</table>
-	
-	\{{else}}
-    	<h2 align="center"> \{{user_recipe}}'s Ingredients </h2>
-		<div align="center">There are no foods associated with this recipe</div>
-	\{{/if}}
+
+<!-- This is a script for a JQUERY AJAX to handle. It will take this script
+     and compile the html with it once the user clicks on the Show Ingredients Button.
+     See more details on searchbar.js in the section where we mount the click function
+     on the Show Ingredients button.-->
+<script id="showIngredientTemplate" type="text/x-handlebars-template">
+     \{{#if display_ingredients}}
+     <h2 align="center"> \{{user_recipe}}'s Ingredients </h2>
+     <table align="center" id="recipe_table">
+          <thead>
+               <tr>
+                    <th>Food</th>
+                    <th>Calories Per Ounce</th>
+               </tr>
+
+          </thead>
+
+          <tbody>
+               \{{#each ingredient}}
+               <tr>
+                    <td>\{{food_name}}</td>
+                    <td>\{{calories_ounce}}</td>
+               </tr>
+               \{{/each}}
+          </tbody>
+     </table>
+
+     \{{else}}
+     <h2 align="center"> \{{user_recipe}}'s Ingredients </h2>
+     <div align="center">There are no foods associated with this recipe</div>
+     \{{/if}}
 
 </script>
 
-</body>
+
 
 
