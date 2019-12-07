@@ -167,6 +167,9 @@ VALUES (?,?,?,?,?,?,?,?,?);
 --Deleting recipe from database
 DELETE FROM recipes WHERE recipe_id=?;
 
+--Delete a user to recipe relationship
+DELETE FROM users_recipes WHERE recipe = ? AND user = ?;
+
 --Updating a recipe's properties
 UPDATE recipes SET recipe_no_meat=?, recipe_no_dairy=?, recipe_no_nuts=?, recipe_no_shellfish=?, recipe_no_carbs=?, recipe_no_animal_products=?, recipe_no_gluten=?, recipe_no_soy=?  WHERE recipe_id=?
 
