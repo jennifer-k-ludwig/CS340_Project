@@ -53,13 +53,29 @@
 	<table align="center">
 		<thead>
 			<th>Recipe Name</th>
+			<th>Remove Recipe</th>
 		</thead>
 
 		<tbody>
 			{{#each recipes}}
 			<tr>
 				<td>{{recipe_name}}</td>
+				<td><button class="removeRecipeFromUserList" value="{{recipe_id}}"> Remove </button></td>
 			</tr>
 			{{/each}}
 		</tbody>
 	</table>
+
+<script>
+	$(document).ready(function(){
+		$(".removeRecipeFromUserList").click(function(){
+			$.ajax({
+            url: '/home/' + $(this).attr('value'),
+            type: 'DELETE',
+            success: function(result){
+                window.location.reload(true);
+            }
+        })
+		});
+	});
+</script>
