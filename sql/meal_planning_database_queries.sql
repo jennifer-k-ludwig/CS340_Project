@@ -29,7 +29,7 @@ INNER JOIN users ON users.diet=diets.diet_id AND user_id=?;
 
 --Pull the user's current recipe selection from the database.
 SELECT 
-	recipes.recipe_name 
+	recipes.recipe_name, recipes.recipe_id 
 FROM recipes 
 INNER JOIN users_recipes ON recipes.recipe_id = users_recipes.recipe 
 INNER JOIN users ON users_recipes.user = users.user_id WHERE user_id=?;
