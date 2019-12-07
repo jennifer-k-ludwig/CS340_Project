@@ -41,7 +41,7 @@ module.exports = function() {
 	
 	// query to get RECIPES -- we'll need to change the query to only select user recipes
 	function getRecipes(res, req, mysql, session, context, complete){
-        mysql.pool.query("SELECT recipes.recipe_name FROM recipes INNER JOIN users_recipes ON recipes.recipe_id = users_recipes.recipe INNER JOIN users ON users_recipes.user = users.user_id WHERE user_id=?", [req.session.user_id], function(error, results, fields){
+        mysql.pool.query("SELECT recipes.recipe_name, recipes.recipe_id FROM recipes INNER JOIN users_recipes ON recipes.recipe_id = users_recipes.recipe INNER JOIN users ON users_recipes.user = users.user_id WHERE user_id=?", [req.session.user_id], function(error, results, fields){
             if(error){
                 res.write(JSON.stringify(error));
                 res.end();
@@ -121,6 +121,26 @@ module.exports = function() {
 			req.session.destroy();
 			res.redirect('/login');
 		}    
+	});
+
+	router.delete('/:id', function(req,res){
+		var mysql = req.app.get('mysql');
+
+          var inserts = [req.params.id, req.session.user_id];
+          var sql = "DELETE FROM users_recipes WHERE recipe = ? AND user = ?";
+
+
+          sql = mysql.pool.query(sql, inserts, function (error, results, fields) {
+               if (error) {
+                    console.log(error)
+                    res.write(JSON.stringify(error));
+                    res.status(400);
+                    res.end();
+               }
+               else {
+                    res.status(202).end();
+               }
+          })
 	});
 	
 	return router;
