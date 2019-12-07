@@ -149,7 +149,6 @@ $(document).ready(function(){
         {
             parent_node.removeChild(parent_node.childNodes[0]);
         }
-        s
         
         title.appendChild(title_text);
         parent_node.appendChild(title);
@@ -225,49 +224,6 @@ $(document).ready(function(){
         var id = $(this).attr('value');
         window.location = "/search/updateIngredients/" + encodeURI(id);
         
-
-        // Tried to do AJAX but it wasn't working...
-        /*
-        var recipeData = {};
-
-        // Grab current row of the button that was clicked
-        var currentRow = this.parentNode.parentNode.rowIndex;
-        var currentRowOfTable = document.getElementById("recipe_table").rows[currentRow];
-
-        // formulate the data from the HTML table
-        var recipeName = currentRowOfTable.cells[0].innerHTML;
-        var recipeMeat = currentRowOfTable.cells[1].innerHTML;
-        var recipeDairy = currentRowOfTable.cells[2].innerHTML;
-        var recipeNuts = currentRowOfTable.cells[3].innerHTML;
-        var recipeShellfish = currentRowOfTable.cells[4].innerHTML;
-        var recipeCarbs = currentRowOfTable.cells[5].innerHTML;
-        var recipeAnimalProd = currentRowOfTable.cells[6].innerHTML;
-        var recipeGluten = currentRowOfTable.cells[7].innerHTML;
-        var recipeSoy = currentRowOfTable.cells[8].innerHTML;
-
-        recipeData.recipeName = recipeName;
-        recipeData.recipeMeat = recipeMeat;
-        recipeData.recipeDairy = recipeDairy;
-        recipeData.recipeNuts = recipeNuts;
-        recipeData.recipeShellfish = recipeShellfish;
-        recipeData.recipeCarbs = recipeCarbs;
-        recipeData.recipeAnimalProd = recipeAnimalProd;
-        recipeData.recipeGluten = recipeGluten;
-        recipeData.recipeSoy = recipeSoy;
-        recipeData.id = id;
-        console.log(recipeData);
-
-        $.ajax({
-        
-            url:'/search/updateIngredient/' + id,
-            type:'post',
-            data: recipeData,
-            success: function(result){
-                console.log("Results", result);
-                // window.location.href = "http://flip3.engr.oregonstate.edu:6750/updateIngredient/" + id;
-            }
-        })
-        */
     });
 
     $(".removeFoodFromRecipeButton").click(function(){
