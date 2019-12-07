@@ -20,7 +20,8 @@ app.use('/search', require('./search.js'));
 app.use('/home', require('./home.js'));
 app.use('/user', require('./user.js'));
 app.use('/new_user', require('./new_user.js'));
-app.use('', require('./login.js'));
+app.use('', require('./home.js'));
+
 app.use(function(req,res){
   res.status(404);
   res.render('404');
