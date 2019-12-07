@@ -13,12 +13,21 @@ to anywhere. Onsubmit is a function and then returns false to prevent the form's
      Our function search_foods_or_recipes() applies the search mechanism we need.-->
 <h3 align="center">Search for a food or recipe</h3>
 <form align="center" onsubmit="search_foods_or_recipes(); return false;">
-     <label>
-          Type: <select id="food_or_recipe">
-               <option value="food">Food</option>
-               <option value="recipe">Recipe</option>
-          </select>
-     </label>
+     {{#if display_recipe}}
+          <label>
+               Type: <select id="food_or_recipe">
+                    <option value="recipe">Recipe</option>
+                    <option value="food">Food</option>
+               </select>
+          </label>
+     {{else}}
+          <label>
+               Type: <select id="food_or_recipe">
+                    <option value="food">Food</option>
+                    <option value="recipe">Recipe</option>
+               </select>
+          </label>
+     {{/if}}
      <label> Name: <input id="user_input_search" type="search" placeholder="Leave blank to search all of a specific type"></label>
      <input type="button" value="Search" onclick="search_foods_or_recipes()">
 </form>
