@@ -1,15 +1,12 @@
-<form action="/home" method="GET">
-	<input type="submit" value="Home">
-</form>
-<form action="/search" method="GET">
-	<input type="submit" value="Search">
-</form>
-<form action="/user" method="GET">
-	<input type="submit" value="Account Settings">
-</form>
-<form action="/home" method="POST">
-	<input type="submit" name="log_out" value="Log Out">
-</form>
+<div id="navBar">
+<ul>
+     <li><a class= "home_nav" href="/home">Home</a></li>
+     <li><a class= "serach_nav" href="/search">Food & Recipes</a></li>
+     <li><a class= "user_nav" href="/user" style="background-color: green;">Account Settings</a></li>
+     <li><form action="/home" method="POST"> <input type="submit" name="log_out" value="Log Out"> </form>  </li>
+     
+</ul>
+</div>
 		
 <h2 align="center">User Settings</h2>
 <form id="update_info" align="center" action="/user" method="post">
@@ -21,21 +18,21 @@
 	<label> Password: <input name="password" type="password" value="{{password}}"></label><br>
 	
 	Dietary Preferences:<br>
-	<label> No Meat <input name="no_meat" value="1" type="checkbox"></label><br>	
+	<label> No Meat <input name="no_meat" value="1" type="checkbox" {{#if no_meat_isChecked}}checked{{else}}{{/if}}></label><br>	
 	
-	<label> No Dairy <input name="no_dairy" value="1" type="checkbox"></label><br>
+	<label> No Dairy <input name="no_dairy" value="1" type="checkbox" {{#if no_dairy_isChecked}}checked{{else}}{{/if}}></label><br>
 	
-	<label> No Nuts <input name="no_nuts" value="1" type="checkbox"></label><br>	
+	<label> No Nuts <input name="no_nuts" value="1" type="checkbox" {{#if no_nuts_isChecked}}checked{{else}}{{/if}}></label><br>	
 	
-	<label> No Shellfish <input name="no_shellfish" value="1" type="checkbox"></label><br>
+	<label> No Shellfish <input name="no_shellfish" value="1" type="checkbox" {{#if no_shellfish_isChecked}}checked{{else}}{{/if}}></label><br>
 	
-	<label> No Carbs <input name="no_carbs" value="1" type="checkbox"></label><br>	
+	<label> No Carbs <input name="no_carbs" value="1" type="checkbox" {{#if no_carbs_isChecked}}checked{{else}}{{/if}}></label><br>	
 	
-	<label> No Animal Products <input name="no_animal_products" value="1" type="checkbox"></label><br>
+	<label> No Animal Products <input name="no_animal_products" value="1" type="checkbox" {{#if no_animal_products_isChecked}}checked{{else}}{{/if}}></label><br>
 	
-	<label> No Gluten <input name="no_gluten" value="1" type="checkbox"></label><br>	
+	<label> No Gluten <input name="no_gluten" value="1" type="checkbox" {{#if no_gluten_isChecked}}checked{{else}}{{/if}}></label><br>	
 	
-	<label> No Soy <input name="no_soy" value="1" type="checkbox"></label><br>
+	<label> No Soy <input name="no_soy" value="1" type="checkbox" {{#if no_soy_isChecked}}checked{{else}}{{/if}}></label><br>
 	
 	<input type="submit" name="update" value="Update Account" >
 </form>
