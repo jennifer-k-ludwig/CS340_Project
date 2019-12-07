@@ -8,10 +8,10 @@ module.exports = function() {
      function searchInput(req, res, mysql, session, context, complete) {
 
 		// hold the user's search type in this variable. This will either be "food" or "recipe"
-          var user_search_type = req.params.type;
+        var user_search_type = req.params.type;
 
-          // get the user's selection
-          // if their selection was blank set their text value to '', otherwise, use the text they provided.
+        // get the user's selection
+        // if their selection was blank set their text value to '', otherwise, use the text they provided.
 		if(!req.params.food_or_recipe_name) 
 		{
 			var user_search_text = '';
@@ -20,12 +20,20 @@ module.exports = function() {
 
 		// if the user searched for foods, then this if statement will be satisfied
 		if (user_search_type === "food") {
-               // query to select all foods from the foods table that match the user's diet preferences.
+			
+			// query to select all foods from the foods table that match the user's diet preferences.
+			// We will first select all the attributes from a user's diet.
+			// Then build a query based on their preferences so that we only select foods that fit with the a user's diet.
+			// For example, if the only restriction for a user is that he/she cannot eat meat, then we will select all the foods
+			// that do not contain meat.
 			mysql.pool.query("SELECT * FROM diets WHERE diet_id=?", [req.session.diet_id], function (error, results) {
 				var user_diet = results[0];
 				var dietCount = 0;			
 				var queryString = "SELECT * FROM foods WHERE ";				
 				
+				// The below IF statements parse through a user's diet to see if they can eat a foods with one of the attributes and builds a queryString
+				// If an attribute is equal to 1 then we must find foods with corresponding attributes of value 0.
+				// For instance, diet_no_meat == 1 makes us want to search for foods with contains_meat = 0.
 				if (user_diet.diet_no_meat==1) {			
 					queryString += "contains_meat=0";				
 					dietCount++;				
@@ -93,18 +101,14 @@ module.exports = function() {
 						res.end();
 					}
 					else {
-							// This helper function changes the 1s and 0s of the boolean values into Yes's and No's
+						// This helper function changes the 1s and 0s of the boolean values into Yes's and No's
 						parseFoodResults(results);
 	
 						// set display_food to true so that search.handlebars displays the food table and the add food form
 						context.display_food = true;
 	
-							// store these attributes just in case we need them (this won't affect anything for the time being)
-						context.user_search_type = user_search_type;
-						context.user_search_text = user_search_text;
-	
-							// store the query results in food data variable.
-							context.food = results;
+						// store the query results in food data variable.
+						context.food = results;
 	
 						complete();
 					}
@@ -114,12 +118,20 @@ module.exports = function() {
 
           // if the user searched for recipes, then this if statement will be satisfied
 		else if (user_search_type === "recipe") {
-               // query to select all recipes from the recipes table that match the user's diet preferences. 			
+
+            // query to select all recipes from the recipes table that match the user's diet preferences.
+			// We will first select all the attributes from a user's diet.
+			// Then build a query based on their preferences so that we only select recipes that fit with the a user's diet.
+			// For example, if the only restriction for a user is that he/she cannot eat meat, then we will select all the recipes
+			// that do not contain meat.		
 			mysql.pool.query("SELECT * FROM diets WHERE diet_id=?", [req.session.diet_id], function (error, results) {
 				var user_diet = results[0];
 				var dietCount = 0;			
 				var queryString = "SELECT * FROM recipes WHERE ";				
 				
+				// The below IF statements parse through a user's diet to see if they can eat recipes with one of the attributes and builds a queryString
+				// If an attribute is equal to 1 then we must find recipes with corresponding attributes of value 1.
+				// For instance, diet_no_meat == 1 makes us want to search for recipes with recipe_no_meat = 1.
 				if (user_diet.diet_no_meat==1) {			
 					queryString += "recipe_no_meat=1";				
 					dietCount++;				
@@ -187,18 +199,18 @@ module.exports = function() {
 						res.end();
 					}
 					else {
-							// This helper function changes the 1s and 0s of the boolean values into Yes's and No's
+						// This helper function changes the 1s and 0s of the boolean values into Yes's and No's
 						parseRecipeResults(results);
 	
 						// set display_recipe to true so that search.handlebars displays the recipe table and the add recipe form
 						context.display_recipe = true;
 	
-							// store these attributes just in case we need them (this won't affect anything for the time being)
+						// store these attributes just in case we need them (this won't affect anything for the time being)
 						context.user_search_type = user_search_type;
 						context.user_search_text = user_search_text;
 	
-							// store the query results in a recipe data variable.
-							context.recipe = results;
+						// store the query results in a recipe data variable.
+						context.recipe = results;
 	
 						complete();
 					}
@@ -211,9 +223,9 @@ module.exports = function() {
 	function recipe_show_ingredients(req, res, mysql, context, complete) {
 
 		// grab the recipeID from the client end	
-          var recipeID = req.params.id;
+        var recipeID = req.params.id;
 
-          // query to select the foods that are associated with the specific recipe the user is interested in
+        // query to select the foods that are already associated with the specific recipe the user is interested in.
 		var query = "SELECT food_name, recipe_name, calories_ounce, food_id, contains_meat, contains_dairy, contains_nuts, contains_shellfish, contains_carbs, contains_animal_products, contains_gluten, contains_soy FROM (recipes INNER JOIN (SELECT * FROM foods_recipes INNER JOIN foods ON foods_recipes.food = foods.food_id) as t1 ON t1.recipe = recipes.recipe_id) where recipe_id = ?";
 		mysql.pool.query(query, recipeID, function(error, results, fields){
 			if(error){
@@ -221,17 +233,18 @@ module.exports = function() {
 				res.end();
 			}
 			else 
-               {
-                    // Change the 1's and 0's of the boolean properties into Yes's and No's for client side
+            {
+				// Change the 1's and 0's of the boolean properties into Yes's and No's for client side
 				parseFoodResults(results);
 
 				// if the query is not the empty set then this if statement applies.
-                    // we set the display_ingredients to true for handlebars to display the table we have in search.handlebars
-                    // we grab the recipe name for handlebars as well as the query result for handlebars to render.
+				// we set the display_ingredients to true for handlebars to display the table we have in search.handlebars
+				// we grab the recipe name for handlebars as well as the query result for handlebars to render.
 				if (Array.isArray(results) && results.length > 0) {
 					context.display_ingredients = true;
 					context.user_recipe = results[0].recipe_name;
 					context.ingredient = results;
+
 					complete();
 				}
 
@@ -244,8 +257,9 @@ module.exports = function() {
 							res.end();
 						}
 						else 
-                              {
+							{
 							context.user_recipe = results[0].recipe_name;
+
 							complete();
 						}
 					});
@@ -255,8 +269,8 @@ module.exports = function() {
 		
 	}
 
-     // Helper function to help build the recipe info we need to render updateIngredients.handlebars
-     // this function will grab all of a specific recipe's properties so that we can use it in updateIngredients.handlebars
+    // Helper function to help build the recipe info we need to render updateIngredients.handlebars
+    // this function will grab all of a specific recipe's properties so that we can use it in updateIngredients.handlebars
 	function buildRecipe(req, res, mysql, context, complete){
 		var query = "SELECT * from recipes where recipe_id = ?";
 		var recipeID = req.params.id;
@@ -266,13 +280,18 @@ module.exports = function() {
 				res.end();
 			}
 			else {
+				
+				// parse results for client side
 				parseRecipeResults(results);
+
 				context.recipe = results;
+				context.id = recipeID;
+
+				complete();
 			}
 		});
 		
-		context.id = req.params.id;
-		complete();
+
 	}
 
      // Helper function for the search feature on the updateIngredients.handlebars page
@@ -288,8 +307,13 @@ module.exports = function() {
 		} 
 		else search_text = req.params.user_search_text;
 
-          // query code to select all foods from the foods table such that each food is not associated with a recipe
-		var query = "SELECT * from (SELECT * from foods WHERE food_id NOT IN (SELECT food from foods_recipes WHERE recipe = ?)) as t1 WHERE food_name LIKE " + mysql.pool.escape('%' + search_text + '%');
+		  // query code to select all foods from the foods table such that each food is not associated with a recipe
+		  // First we select all the food (a FKEY to food_id) from the foods_recipes table where the recipe (a FKEY to recipe_id) equals the user's recipe id.
+		  // AND where food IS NOT NULL. This is to protect us from ON DELETE CASCADE that may turn the food attribute in foods_recipes to NULL.
+		  // Otherwise, our query will be empty set when we try to compare values to NULL.
+		  // After this subquery, we select all the foods from the food_table that do not belong in the first subquery.
+		  // Then we select all rows filtering by the user's search.
+		var query = "SELECT * FROM (SELECT * FROM foods WHERE food_id NOT IN (SELECT food FROM foods_recipes WHERE recipe = ? AND food IS NOT NULL)) as t1 WHERE food_name LIKE " + mysql.pool.escape('%' + search_text + '%');
 		var recipeID = req.params.id;
 		mysql.pool.query(query, recipeID, function(error, results, fields){
 			if(error){
@@ -298,13 +322,13 @@ module.exports = function() {
 			}
 			else {
 
-                    // This helper function changes all the 1s and 0s to Yes's and No's
+                // This helper function changes all the 1s and 0s to Yes's and No's
 				parseFoodResults(results);
 
 				// set display_food to true so that search.handlebars displays the food table
 				context.display_food = true;
 
-                    // store this info for data purposes
+                // store this info for data purposes
 				context.user_search = search_text;
 
 				context.food = results;
@@ -417,7 +441,7 @@ module.exports = function() {
 			
 	});
 
-	// Route Handler -- Handles the search function for food in UpdateIngredients page
+	// handles the search function for food in UpdateIngredients page
 	router.get('/updateIngredients/food/:id/:user_search_text?', function(req,res){
           var context = {};
           context.jsscripts = ["searchbar.js"];
@@ -427,7 +451,7 @@ module.exports = function() {
 
 	});
 
-	// Handles the update Ingredient button. Router handler to go to the update ingredients page for the user to update a recipe
+	// Handles the update Ingredient button. Router handler to go to the update ingredients page for the user to update a recipe's ingredients
      router.get('/updateIngredients/:id', function (req, res) {
           var callbackCount = 0;
           var context = {};

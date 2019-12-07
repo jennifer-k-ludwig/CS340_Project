@@ -17,6 +17,8 @@ module.exports = function(){
                 res.end();
 			}
 			
+			// if the initial query is the empty set, then we do not have that particular diet in our DB, so we will insert it into our DB
+			// and recursively call getDiet to select it again
 			else if (results === undefined || results.length == 0) {
 				insertDiet(res, req, mysql, session);
 				getDiet(res, req, mysql, session);
@@ -60,10 +62,7 @@ module.exports = function(){
 	};
 	
 	//getUser - Selects user id from database based on the inputted email address and password. If user does not exists, adds them to the database. Sets session user id.
-	//NEED TO HANDLE CASES WHERE USER ALREADY EXISTS
 	function getUser(res, req, mysql, session) {
-		
-		//console.log("Inside getUser");
 		
 		mysql.pool.query("SELECT user_id FROM users WHERE email_address=?", 
 		[req.body.email_address], function(error, results, fields){
@@ -71,20 +70,17 @@ module.exports = function(){
                 res.write(JSON.stringify(error));
                 res.end();
 			}
+
+			// if the initial query is the empty set, then we do not have that particular user in our DB, so we will insert it into our DB
+			// and recursively call getUser to select it again
 			else if (results === undefined || results.length == 0) {
 				insertUser(res, req, mysql, session);
 				getUser(res, req, mysql, session);
 			}		
 			
 			else {
-				//console.log("User Id Results");
-				//console.log(results);
-				//console.log('\n');
 				
 				req.session.user_id = results[0].user_id;
-				//console.log("Session user_id");
-				//console.log(req.session.user_id);
-				//console.log('\n');
 				
 				res.redirect('/home');
 			}			
@@ -93,7 +89,6 @@ module.exports = function(){
 	
 	//insertDiet - Inserts diet into dieats table based on form data.
 	function insertDiet(res, req, mysql, session) {
-			//console.log("Inside insertDiet");
 			mysql.pool.query('INSERT INTO `diets` (`diet_no_meat`,`diet_no_dairy`,`diet_no_nuts`,`diet_no_shellfish`,`diet_no_carbs`,`diet_no_animal_products`,`diet_no_gluten`,`diet_no_soy`) VALUES (?,?,?,?,?,?,?,?)', 
 			[req.body.no_meat,req.body.no_dairy,req.body.no_nuts,req.body.no_shellfish,req.body.no_carbs,req.body.no_animal_products,req.body.no_gluten,req.body.no_soy], function(error, results, fields){
 				if(error){

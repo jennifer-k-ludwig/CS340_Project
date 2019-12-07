@@ -62,13 +62,10 @@ module.exports = function(){
 		if (current.diet_no_soy === 1) current.no_soy_isChecked = true;
 		else current.no_soy_isChecked = false;
  
-
-
 	}
+
 	//updateDiet - Selects existing diet based on form data. If diet does not exist, creates new diet, otherwise sets session id and updates user info.
 	function updateDiet(res, req, mysql, session, current) {
-		
-		//console.log("Inside updateDiet");
 		
 		var updateUserNotCalled = true;
 		
@@ -79,6 +76,8 @@ module.exports = function(){
                 res.end();
 			}
 			
+			// if the initial query is the empty set, then we do not have that particular diet in our DB, so we will insert it into our DB
+			// and recursively call updateDiet to select it again.
 			else if (results === undefined || results.length == 0) {
 				insertDiet(res, req, mysql, session);
 				updateDiet(res, req, mysql, session);
@@ -89,7 +88,9 @@ module.exports = function(){
 				console.log(results);
 				console.log('\n');
 				
+				// assign diet to the user's session
 				req.session.diet_id = results[0].diet_id;
+
 				console.log("Session diet_id");
 				console.log(req.session.diet_id);
 				console.log('\n');
@@ -182,6 +183,7 @@ module.exports = function(){
           }
      });
 
+	// renders page for user to update their info
 	router.get('/', function(req,res){
 
           var callbackCount = 0;
@@ -204,6 +206,7 @@ module.exports = function(){
 		
 	});
 
+	// sends data for updating a user's info
 	router.post('/', function(req,res){
 
           var mysql = req.app.get('mysql');
