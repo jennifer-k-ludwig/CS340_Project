@@ -1,125 +1,113 @@
-<h1 align = "center">
-    <div>The {{user_recipe}} Recipe</div>
-</h1>
+<div id="navBar">
+<ul>
+     <li><a class= "home_nav" href="/home">Home</a></li>
+     <li><a class= "serach_nav" href="/search" style="background-color: green;">Food & Recipes</a></li>
+     <li><a class= "user_nav" href="/user">Account Settings</a></li>
+     <li><form action="/home" method="POST"> <input type="submit" name="log_out" value="Log Out"> </form>  </li>
+     
+</ul>
+</div>
+
+
+<h1 align="center"> The {{user_recipe}} Recipe </h1>
 <li hidden id="update_recipe_id" value="{{id}}"></li>
 <br>
 <br>
-    <table align="center" id = "recipe_table">
-        <thead>
-            <th>Meat</th>
-            <th>Dairy</th>
-            <th>Nuts</th>
-            <th>Shellfish</th>
-            <th>Carbs</th>
-            <th>Animal Products</th>
-            <th>Gluten</th>  
-            <th>Soy</th>
-        </thead> 
+<table align="center" id="recipe_table">
+     <thead>
+          <tr>
+               <th>Meat</th>
+               <th>Dairy</th>
+               <th>Nuts</th>
+               <th>Shellfish</th>
+               <th>Carbs</th>
+               <th>Animal Products</th>
+               <th>Gluten</th>
+               <th>Soy</th>
+          </tr>
+     </thead>
 
-        <tbody>
-            {{#each recipe}}
-            <tr>
-                <td>{{recipe_no_meat}}</td>
-                <td>{{recipe_no_dairy}}</td>
-                <td>{{recipe_no_nuts}}</td>
-                <td>{{recipe_no_shellfish}}</td>
-                <td>{{recipe_no_carbs}}</td>
-                <td>{{recipe_no_animal_products}}</td>
-                <td>{{recipe_no_gluten}}</td>
-                <td>{{recipe_no_soy}}</td>
-            </tr>
-            {{/each}}
-        </tbody>
-    </table>
+     <tbody>
+          {{#each recipe}}
+          <tr>
+               <td>{{recipe_no_meat}}</td>
+               <td>{{recipe_no_dairy}}</td>
+               <td>{{recipe_no_nuts}}</td>
+               <td>{{recipe_no_shellfish}}</td>
+               <td>{{recipe_no_carbs}}</td>
+               <td>{{recipe_no_animal_products}}</td>
+               <td>{{recipe_no_gluten}}</td>
+               <td>{{recipe_no_soy}}</td>
+          </tr>
+          {{/each}}
+     </tbody>
+</table>
 
 
 <br>
 <div>
-    {{#if display_ingredients}}
-	<h2 align="center"> {{user_recipe}}'s Ingredients </h2>
-	<table align="center" id = "recipe_table">
-		<thead>
-			<th>Food</th>
-			<th>Calories Per Ounce</th>
-            <th>Meat</th>
-            <th>Dairy</th>
-            <th>Nuts</th>
-            <th>Shellfish</th>
-            <th>Carbs</th>
-            <th>Animal Products</th>
-            <th>Gluten</th>  
-            <th>Soy</th>
-            <th>Remove food from recipe</th>
-		</thead> 
+     {{#if display_ingredients}}
+     <h2 align="center"> {{user_recipe}}'s Ingredients </h2>
+     <table align="center" id="recipe_table">
+          <thead>
+               <tr>
+                    <th>Food</th>
+                    <th>Calories Per Ounce</th>
+                    <th>Meat</th>
+                    <th>Dairy</th>
+                    <th>Nuts</th>
+                    <th>Shellfish</th>
+                    <th>Carbs</th>
+                    <th>Animal Products</th>
+                    <th>Gluten</th>
+                    <th>Soy</th>
+                    <th>Remove food from recipe</th>
+               </tr>
+          </thead>
 
-		<tbody>
-			{{#each ingredient}}
-			<tr>
-				<td>{{food_name}}</td>
-				<td>{{calories_ounce}}</td>
-                <td>{{contains_meat}}</td>
-                <td>{{contains_dairy}}</td>
-                <td>{{contains_nuts}}</td>
-                <td>{{contains_shellfish}}</td>
-                <td>{{contains_carbs}}</td>
-                <td>{{contains_animal_products}}</td>
-                <td>{{contains_gluten}}</td>
-                <td>{{contains_soy}}</td>
-                <td><button class="removeFoodFromRecipeButton" value={{food_id}}> Remove </button></td>
-			</tr>
-			{{/each}}
-		</tbody>
-	</table>
-	
-	{{else}}
-    	<h2 align="center"> {{user_recipe}}'s Ingredients </h2>
-		<div align="center">There are no foods associated with this recipe</div>
-	{{/if}}
+          <tbody>
+               {{#each ingredient}}
+               <tr>
+                    <td>{{food_name}}</td>
+                    <td>{{calories_ounce}}</td>
+                    <td>{{contains_meat}}</td>
+                    <td>{{contains_dairy}}</td>
+                    <td>{{contains_nuts}}</td>
+                    <td>{{contains_shellfish}}</td>
+                    <td>{{contains_carbs}}</td>
+                    <td>{{contains_animal_products}}</td>
+                    <td>{{contains_gluten}}</td>
+                    <td>{{contains_soy}}</td>
+                    <td><button class="removeFoodFromRecipeButton" value={{food_id}}> Remove </button></td>
+               </tr>
+               {{/each}}
+          </tbody>
+     </table>
+
+     {{else}}
+     <h2 align="center"> {{user_recipe}}'s Ingredients </h2>
+     <div align="center">There are no foods associated with this recipe</div>
+     {{/if}}
 </div>
 <br>
 <br>
 <h3 align="center">Search for a food to add to the recipe</h3>
-<form align="center" action="" method="" onsubmit="foodsForRecipeButton(); return false;">
-	<label><input id ="user_food_search" type="search" placeholder="Leave blank to search for all foods"></label>	
-	<input type="button" value="Search" onclick="foodsForRecipeButton()">
+<form align="center" action="" onsubmit="foodsForRecipeButton(); return false;">
+     <label><input id="user_food_search" type="search" placeholder="Leave blank to search for all foods"></label>
+     <input type="button" value="Search" onclick="foodsForRecipeButton()">
 </form>
 <br>
 <br>
 <div id="food_search_results"></div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <script id="show_food_search_results" type="text/x-handlebars-template">
-    \{{#if display_food}}
-        <h2 align="center">Available foods... </h2>
-        <h4 align="center">Note: The below foods are foods not found in the recipe.</h4>
-            <table align="center">
-                <thead>
+     \{{#if display_food}}
+     <h2 align="center">Available foods... </h2>
+     <h4 align="center">Note: The below foods are foods not found in the recipe.</h4>
+     <table align="center">
+          <thead>
+               <tr>
                     <th>Food</th>
                     <th>Calories per Ounce</th>
                     <th>Meat</th>
@@ -128,30 +116,32 @@
                     <th>Shellfish</th>
                     <th>Carbs</th>
                     <th>Animal Products</th>
-                    <th>Gluten</th>  
+                    <th>Gluten</th>
                     <th>Soy</th>
                     <th>Add to recipe</th>
-                </thead> 
+               </tr>
 
-                <tbody>
-                    \{{#each food}}
-                    <tr>
-                        <td>\{{food_name}}</td>
-                        <td>\{{calories_ounce}}</td>
-                        <td>\{{contains_meat}}</td>
-                        <td>\{{contains_dairy}}</td>
-                        <td>\{{contains_nuts}}</td>
-                        <td>\{{contains_shellfish}}</td>
-                        <td>\{{contains_carbs}}</td>
-                        <td>\{{contains_animal_products}}</td>
-                        <td>\{{contains_gluten}}</td>
-                        <td>\{{contains_soy}}</td>
-                        <td> <button class = "addFoodToRecipeButton" value="\{{food_id}}"> Add Food </button></td>
-                    </tr>
-                    \{{/each}}
-                </tbody>
-            </table>
-        \{{else}}
-    \{{/if}}
+          </thead>
+
+          <tbody>
+               \{{#each food}}
+               <tr>
+                    <td>\{{food_name}}</td>
+                    <td>\{{calories_ounce}}</td>
+                    <td>\{{contains_meat}}</td>
+                    <td>\{{contains_dairy}}</td>
+                    <td>\{{contains_nuts}}</td>
+                    <td>\{{contains_shellfish}}</td>
+                    <td>\{{contains_carbs}}</td>
+                    <td>\{{contains_animal_products}}</td>
+                    <td>\{{contains_gluten}}</td>
+                    <td>\{{contains_soy}}</td>
+                    <td> <button class="addFoodToRecipeButton" value="\{{food_id}}"> Add Food </button></td>
+               </tr>
+               \{{/each}}
+          </tbody>
+     </table>
+     \{{else}}
+     \{{/if}}
 </script>
 

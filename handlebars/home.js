@@ -3,7 +3,7 @@ module.exports = function() {
 	var express = require('express');
      var router = express.Router();
 
-
+     // Retrieve's user's first name for HTML/Handlebars
 	function getName(res, req, mysql, session, context, complete){
         mysql.pool.query("SELECT first_name FROM users WHERE user_id=?", [req.session.user_id], function(error, results, fields){
             if(error){
@@ -21,7 +21,7 @@ module.exports = function() {
 
 
 
-	// query to get Diets -- we'll need to change the query to only select user diets
+	// query to get a user's specific diet
 	function getDiet(res, req, mysql, session, context, complete){
         mysql.pool.query("SELECT diet_no_meat,diet_no_dairy,diet_no_nuts,diet_no_shellfish,diet_no_carbs,diet_no_animal_products,diet_no_gluten,diet_no_soy FROM diets INNER JOIN users ON users.diet=diets.diet_id WHERE user_id=?", [req.session.user_id], function(error, results, fields){
             if(error){
@@ -39,9 +39,9 @@ module.exports = function() {
 		});
 	}
 	
-	// query to get RECIPES -- we'll need to change the query to only select user recipes
+	// query to get a user's recipe
 	function getRecipes(res, req, mysql, session, context, complete){
-        mysql.pool.query("SELECT recipes.recipe_name FROM recipes INNER JOIN users_recipes ON recipes.recipe_id = users_recipes.recipe INNER JOIN users ON users_recipes.user = users.user_id WHERE user_id=?", [req.session.user_id], function(error, results, fields){
+        mysql.pool.query("SELECT recipes.recipe_name, recipes.recipe_id FROM recipes INNER JOIN users_recipes ON recipes.recipe_id = users_recipes.recipe INNER JOIN users ON users_recipes.user = users.user_id WHERE user_id=?", [req.session.user_id], function(error, results, fields){
             if(error){
                 res.write(JSON.stringify(error));
                 res.end();
@@ -95,13 +95,14 @@ module.exports = function() {
           }
      });
 
-	//Home Page get and post requests
+	//Renders the initial home page
      router.get('/', function (req, res) {
 
           var callbackCount = 0;
           var context = {};
           var mysql = req.app.get('mysql');
           var session = req.app.get('session');
+          context.jsscripts = ["removeRecipeFromUser.js"];
 
           getName(res, req, mysql, session, context, complete);
           getRecipes(res, req, mysql, session, context, complete);
@@ -114,13 +115,35 @@ module.exports = function() {
           }
 		
 	});
-		
+     
+     // logout
      router.post('/', function (req, res) {
 
 		if(req.body.log_out) {
 			req.session.destroy();
 			res.redirect('/login');
 		}    
+	});
+
+     // Remove's a recipe from a user's personal list
+	router.delete('/:id', function(req,res){
+		var mysql = req.app.get('mysql');
+
+          var inserts = [req.params.id, req.session.user_id];
+          var sql = "DELETE FROM users_recipes WHERE recipe = ? AND user = ?";
+
+
+          sql = mysql.pool.query(sql, inserts, function (error, results, fields) {
+               if (error) {
+                    console.log(error)
+                    res.write(JSON.stringify(error));
+                    res.status(400);
+                    res.end();
+               }
+               else {
+                    res.status(202).end();
+               }
+          })
 	});
 	
 	return router;

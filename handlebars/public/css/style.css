@@ -1,6 +1,9 @@
 #user_input_search {
     width: 50em;
 }
+#user_food_search {
+    width:50em;
+}
 
 #displayIngredientsDiv {
     display:none;
@@ -22,6 +25,46 @@
     display:none;
 }
 
+#navBar {
+    text-align: center;
+}
+ul {
+    display: inline-block;
+    list-style-type: none;
+    margin: auto;
+    /*overflow: hidden;*/
+}
+
+li {
+    float: left;
+    border-right: 1px solid white;
+}
+
+li a {
+    display: block;
+    color: darkgrey;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: blue;
+}
+
+li input {
+    display: block;
+    color: darkgrey;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    background-color: white;
+    border: none;
+}
+
+li input:hover {
+    background-color: blue;
+}
 .search_url_path {
     display: none;
 }

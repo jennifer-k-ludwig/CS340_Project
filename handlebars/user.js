@@ -3,12 +3,6 @@ module.exports = function(){
     var express = require('express');
      var router = express.Router();
 
-     // Helper function to make the user login if they haven't already
-     function forceLogin(req) {
-          console.log("session ID", req.session.user_id);
-          return req.session.user_id === undefined;
-
-     }
 
 	//deleteUser - Deletes user from database, destroys the session, and redirects to login page.
 	function deleteUser (res,req,mysql) {
@@ -42,10 +36,36 @@ module.exports = function(){
 		if (req.body.no_soy != 1) req.body.no_soy = 0;	
 	};
 	
+	// helper function for determining check marks in user.handlebars
+	function prePopulateChecks(current) {
+		if (current.diet_no_meat === 1) current.no_meat_isChecked = true;
+ 		else current.no_meat_isChecked = false;
+
+		if (current.diet_no_dairy === 1) current.no_dairy_isChecked = true;
+		else current.no_dairy_isChecked = false;
+
+		if (current.diet_no_nuts === 1) current.no_nuts_isChecked = true;
+		else current.no_nuts_isChecked = false;
+
+		if (current.diet_no_shellfish === 1) current.no_shellfish_isChecked = true;
+		else current.no_shellfish_isChecked = false;
+
+		if (current.diet_no_carbs === 1) current.no_carbs_isChecked = true;
+		else current.no_carbs_isChecked = false;
+
+		if (current.diet_no_animal_products === 1) current.no_animal_products_isChecked = true;
+		else current.no_animal_products_isChecked = false;
+
+		if (current.diet_no_gluten === 1) current.no_gluten_isChecked = true;
+		else current.no_gluten_isChecked = false;
+
+		if (current.diet_no_soy === 1) current.no_soy_isChecked = true;
+		else current.no_soy_isChecked = false;
+ 
+	}
+
 	//updateDiet - Selects existing diet based on form data. If diet does not exist, creates new diet, otherwise sets session id and updates user info.
 	function updateDiet(res, req, mysql, session, current) {
-		
-		//console.log("Inside updateDiet");
 		
 		var updateUserNotCalled = true;
 		
@@ -56,6 +76,8 @@ module.exports = function(){
                 res.end();
 			}
 			
+			// if the initial query is the empty set, then we do not have that particular diet in our DB, so we will insert it into our DB
+			// and recursively call updateDiet to select it again.
 			else if (results === undefined || results.length == 0) {
 				insertDiet(res, req, mysql, session);
 				updateDiet(res, req, mysql, session);
@@ -66,7 +88,9 @@ module.exports = function(){
 				console.log(results);
 				console.log('\n');
 				
+				// assign diet to the user's session
 				req.session.diet_id = results[0].diet_id;
+
 				console.log("Session diet_id");
 				console.log(req.session.diet_id);
 				console.log('\n');
@@ -112,14 +136,20 @@ module.exports = function(){
 				res.write(JSON.stringify(error));
 				res.end();
 			}
-			
-               current = results[0];
-               current.birth_date = current.birth_date.toISOString().substring(0, 10); // converts the ISO DATE format into a YYYY-MM-DD format
-			console.log("Current:");
-               console.log(current);
+			else {
+				
+				// safety just in case result turns out to be the empty set and we try to access a 0th index that does not exist
+				if (Array.isArray(results) && results.length > 0){
+					current = results[0];
+					current.birth_date = current.birth_date.toISOString().substring(0, 10); // converts the ISO DATE format into a YYYY-MM-DD format
+					prePopulateChecks(current);
+					console.log("Current:");
+					console.log(current);
+					complete(res,req,context,current);
+				}
+				
+			}
                
-               
-			complete(res,req,context,current);
 		});
 	}
 	
@@ -131,12 +161,14 @@ module.exports = function(){
 				res.write(JSON.stringify(error));
 				res.end();
 			}
+			else {
+				current = results[0];
+				console.log("Current:");
+				console.log(current);
+				
+				updateDiet(res, req, mysql, session, current);
+			}
 			
-			current = results[0];
-			console.log("Current:");
-			console.log(current);
-			
-			updateDiet(res, req, mysql, session, current);
 		});
      }
 
@@ -151,39 +183,30 @@ module.exports = function(){
           }
      });
 
+	// renders page for user to update their info
 	router.get('/', function(req,res){
-          // if the user has not logged in, make them do so
-          if (forceLogin(req)) {
-               res.redirect('/login');
-          }
 
-          else {
-               var callbackCount = 0;
-               var mysql = req.app.get('mysql');
-               var session = req.app.get('session');
-               var context = {};
-               var current;
+          var callbackCount = 0;
+          var mysql = req.app.get('mysql');
+          var session = req.app.get('session');
+          var context = {};
+          var current;
 
-               currentUserGET(res, req, mysql, session, complete, context, current);
+          currentUserGET(res, req, mysql, session, complete, context, current);
 
-               function complete(res, req, context, current) {
-                    callbackCount++;
-                    if (callbackCount >= 1) {
-                         context.first_name = current.first_name;
-                         context.last_name = current.last_name;
-                         context.birth_date = current.birth_date;
-                         context.max_calories = current.max_calories;
-                         context.email_address = current.email_address;
-                         context.password = current.password;
-                         context.no_meat_checked = false;
-                         res.render('user', context);
-                    }
+          function complete(res, req, context, current) {
+               callbackCount++;
+               if (callbackCount >= 1) {
+				   	context = current;
+                    res.render('user', context);
                }
-
           }
+
+          
 		
 	});
 
+	// sends data for updating a user's info
 	router.post('/', function(req,res){
 
           var mysql = req.app.get('mysql');
