@@ -39,8 +39,10 @@ INSERT INTO `diets`
 	`diet_no_soy`) 
 VALUES
 (TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE),
+(FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE),
 (FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE),
-(FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE);
+(FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE),
+(FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE);
 UNLOCK TABLES;
 
 --
@@ -74,10 +76,10 @@ INSERT INTO `users`
 	`max_calories`,
 	`diet`) 
 VALUES
-('Steve', 'Smith', '2001-01-23', 's.smith@gmail.com', 'rider3', 
-'3000', 1),
-('Jessica', 'Gervais', '1990-11-14', 'badass@yahoo.com', 
-'pumpkinpi3', '2000', 2);
+('Michael', 'Scott', '1967-03-15', 'm.scott@paper.com', 'dundermifflin', '3000', 1),
+('Kermit', 'The Frog', '1980-11-14', 'greenboy@yahoo.com', 'noteasybeinggreen', '500', 4),
+('Fresh', 'Prince', '1968-09-25', 'belair@gmail.com', 'poppin', '2500', 3),
+('April', 'Ludgate', '1994-10-31', 'a.ludgate@parks.com', 'itwasntme', '2000', 2);
 UNLOCK TABLES;
 
 --
@@ -120,7 +122,9 @@ VALUES
 ('Chicken Pot Pie',FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE),
 ('Peach Cobbler',TRUE,TRUE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE),
 ('Chicken Parmesan',FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE),
-('Walnut Brownies',TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,TRUE);
+('Walnut Brownies',TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,TRUE),
+('Vegetarian Lentil Soup',TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE),
+('Tofu Stir Fry',TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,FALSE);
 UNLOCK TABLES;
 
 --
@@ -166,7 +170,8 @@ VALUES
 ('Flour',103,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE),
 ('Walnuts',185,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE),
 ('Butter',204,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE),
-('Peaches',11,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE);
+('Peaches',11,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE),
+('Lentils',116,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE);
 UNLOCK TABLES;
 
 --
@@ -190,9 +195,14 @@ CREATE TABLE `users_recipes` (
 
 LOCK TABLES `users_recipes` WRITE;
 INSERT INTO `users_recipes` (`user`,`recipe`) VALUES
-(1,NULL),
-(2,3),
-(2,6);
+(1,8),
+(2,8),
+(2,9),
+(3,5),
+(3,7),
+(4,6),
+(4,4),
+(4,3);
 UNLOCK TABLES;
 
 --
@@ -216,9 +226,22 @@ CREATE TABLE `recipes_diets` (
 
 LOCK TABLES `recipes_diets` WRITE;
 INSERT INTO `recipes_diets` (`recipe`,`diet`) VALUES
-(1,3),
-(2,3),
-(3,3);
+(8,4),
+(9,4),
+(8,1),
+(1,2),
+(2,2),
+(3,2),
+(4,2),
+(5,2),
+(6,2),
+(7,2),
+(8,2),
+(9,2),
+(5,3),
+(7,3),
+(8,3),
+(9,3);
 UNLOCK TABLES;
 
 --
@@ -252,5 +275,6 @@ VALUES
 (4,1),
 (4,2),
 (4,3),
-(4,6);
+(4,6),
+(9,8);
 UNLOCK TABLES;
