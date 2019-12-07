@@ -66,16 +66,3 @@
 		</tbody>
 	</table>
 
-<script>
-	$(document).ready(function(){
-		$(".removeRecipeFromUserList").click(function(){
-			$.ajax({
-            url: '/home/' + $(this).attr('value'),
-            type: 'DELETE',
-            success: function(result){
-                window.location.reload(true);
-            }
-        })
-		});
-	});
-</script>
